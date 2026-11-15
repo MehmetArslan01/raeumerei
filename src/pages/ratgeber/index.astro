@@ -1,0 +1,36 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import { artikel } from '../../data/ratgeber';
+---
+<Basis
+  title="Ratgeber: Räumung und Übergabe in Wien | Räumerei"
+  description="Ratgeber rund um Entrümpelung, Wohnungsübergabe und Räumung nach einem Todesfall in Wien: Kosten, Checklisten und die richtige Reihenfolge."
+  canonicalPath="/ratgeber/"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Ratgeber', url: '/ratgeber/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Ratgeber</p>
+      <h1 style="margin-block-start: var(--s-4);">Bevor geräumt wird</h1>
+      <p class="lead">
+        Antworten auf die Fragen, die uns am Telefon am häufigsten gestellt
+        werden. Ohne Fachsprache und mit dem Hinweis, wer im Zweifel zuständig ist.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap grid grid--2">
+      {artikel.map((a) => (
+        <a class="card" href={`/ratgeber/${a.slug}/`}>
+          <h2 style="font-size: 1.45rem;">{a.h1}</h2>
+          <p>{a.lead}</p>
+          <span class="card__mehr">Lesen · {a.lesezeit}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <Anfrage />
+</Basis>

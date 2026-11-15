@@ -1,0 +1,148 @@
+---
+import Logo from './Logo.astro';
+import { company } from '../data/company';
+import { leistungen } from '../data/leistungen';
+import { NAV_EN, gegenstueck, sprache } from '../data/i18n';
+
+const pfad = Astro.url.pathname;
+const en = sprache(pfad) === 'en';
+const haupt = en
+  ? NAV_EN.slice(0, 4)
+  : [
+      { name: 'Entrümpelung', url: '/entruempelung-wien/' },
+      { name: 'Wohnungsräumung', url: '/wohnungsraeumung-wien/' },
+      { name: 'Umzug', url: '/umzug-wien/' },
+      { name: 'Preise', url: '/preise/' },
+      { name: 'Ratgeber', url: '/ratgeber/' },
+    ];
+
+/* Sprachwechsel: auf das Gegenstück, sonst auf die Startseite der anderen Sprache. */
+const paar = gegenstueck(pfad);
+const wechsel = en
+  ? { url: paar?.de ?? '/', kurz: 'DE', label: 'Diese Seite auf Deutsch', lang: 'de' }
+  : { url: paar?.en ?? '/en/', kurz: 'EN', label: 'This page in English', lang: 'en' };
+---
+<header class="kopf-leiste">
+  <div class="wrap kopf-leiste__innen">
+    <a href={en ? '/en/' : '/'} class="kopf-leiste__logo" aria-label={en ? `${company.brandLong}, home` : `${company.brandLong}, zur Startseite`}><Logo /></a>
+
+    <nav class="nav" aria-label={en ? 'Main navigation' : 'Hauptnavigation'}>
+      <ul>
+        {haupt.map((l) => (
+          <li><a href={l.url} aria-current={pfad === l.url ? 'page' : undefined}>{l.name}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="sprachwechsel" href={wechsel.url} hreflang={wechsel.lang} lang={wechsel.lang} aria-label={wechsel.label}>{wechsel.kurz}</a>
+
+    <a class="kopf-leiste__tel" href={`tel:${company.phoneHref}`}>
+      <span class="kopf-leiste__tel-label">{en ? 'Call us' : 'Anrufen'}</span>
+      <span class="kopf-leiste__tel-nr">{company.phoneDisplay}</span>
+    </a>
+
+    {/* Menü ohne JavaScript: <details> öffnet und schließt von selbst. */}
+    <details class="menue">
+      <summary aria-label={en ? 'Open or close menu' : 'Menü öffnen oder schließen'}><span></span></summary>
+      {en ? (
+        <nav class="menue__feld" aria-label="All pages">
+          <p class="menue__titel">Services</p>
+          <ul>
+            <li><a href="/en/">Home</a></li>
+            {NAV_EN.map((l) => <li><a href={l.url}>{l.name}</a></li>)}
+          </ul>
+          <p class="menue__titel">Deutsch</p>
+          <ul>
+            <li><a href={wechsel.url} hreflang="de" lang="de">{wechsel.label}</a></li>
+          </ul>
+        </nav>
+      ) : (
+        <nav class="menue__feld" aria-label="Alle Seiten">
+          <p class="menue__titel">Räumung</p>
+          <ul>
+            {leistungen.filter((l) => l.gruppe === 'raeumung').map((l) => (
+              <li><a href={`/${l.slug}/`}>{l.nav}</a></li>
+            ))}
+          </ul>
+          <p class="menue__titel">Umzug</p>
+          <ul>
+            {leistungen.filter((l) => l.gruppe === 'umzug').map((l) => (
+              <li><a href={`/${l.slug}/`}>{l.nav}</a></li>
+            ))}
+          </ul>
+          <p class="menue__titel">Mehr</p>
+          <ul>
+            <li><a href="/preise/">Preise</a></li>
+            <li><a href="/ablauf/">Ablauf</a></li>
+            <li><a href="/einsatzgebiet-wien/">Einsatzgebiet</a></li>
+            <li><a href="/ratgeber/">Ratgeber</a></li>
+            <li><a href="/ueber-uns/">Über uns</a></li>
+            <li><a href="/kontakt/">Kontakt</a></li>
+            <li><a href={wechsel.url} hreflang="en" lang="en">English</a></li>
+          </ul>
+        </nav>
+      )}
+    </details>
+  </div>
+</header>
+
+<style>
+  .kopf-leiste {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-block-end: 1px solid var(--line);
+  }
+  .kopf-leiste__innen { display: flex; align-items: center; gap: var(--s-3); min-height: 4.5rem; }
+  .kopf-leiste__logo { text-decoration: none; margin-inline-end: auto; }
+
+  .nav { display: none; }
+  .nav ul { list-style: none; padding: 0; display: flex; gap: var(--s-5); }
+  .nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 1rem; padding-block: var(--s-2); border-block-end: 3px solid transparent; }
+  .nav a:hover, .nav a[aria-current] { border-color: var(--accent); }
+
+  .sprachwechsel {
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%;
+    border: 1.5px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 0.85rem;
+  }
+  .sprachwechsel:hover { border-color: var(--accent); color: var(--accent-dark); }
+
+  .kopf-leiste__tel {
+    display: none; flex-direction: column; text-decoration: none; line-height: 1.15;
+    padding: 0.5rem 1.1rem; border-radius: 999px; background: var(--ink); color: #fff;
+  }
+  .kopf-leiste__tel:hover { background: var(--accent-dark); }
+  .kopf-leiste__tel-label { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+  .kopf-leiste__tel-nr { font-weight: 700; font-size: 1rem; white-space: nowrap; }
+
+  @media (min-width: 30rem) { .kopf-leiste__tel { display: flex; } }
+  @media (min-width: 66rem) { .nav { display: block; margin-inline-end: var(--s-3); } .menue { display: none; } }
+
+  .menue summary {
+    list-style: none; width: 3rem; height: 3rem; display: grid; place-items: center;
+    border: 1.5px solid var(--ink); border-radius: 50%; cursor: pointer;
+  }
+  .menue summary::-webkit-details-marker { display: none; }
+  .menue summary span, .menue summary span::before, .menue summary span::after {
+    display: block; width: 1.15rem; height: 2px; background: var(--ink); border-radius: 2px;
+  }
+  .menue summary span { position: relative; }
+  .menue summary span::before, .menue summary span::after { content: ""; position: absolute; left: 0; }
+  .menue summary span::before { top: -6px; }
+  .menue summary span::after { top: 6px; }
+  .menue[open] summary { background: var(--ink); }
+  .menue[open] summary span { background: transparent; }
+  .menue[open] summary span::before { top: 0; transform: rotate(45deg); background: #fff; }
+  .menue[open] summary span::after { top: 0; transform: rotate(-45deg); background: #fff; }
+
+  .menue__feld {
+    position: absolute; left: 0; right: 0; top: 100%;
+    max-height: calc(100dvh - 4.5rem); overflow-y: auto;
+    background: var(--bg); border-block-end: 1px solid var(--line);
+    padding: var(--s-5) 1rem var(--s-7);
+  }
+  .menue__titel { font-size: var(--fs-0); font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent-dark); margin-block: var(--s-5) var(--s-2); }
+  .menue__titel:first-child { margin-block-start: 0; }
+  .menue__feld ul { list-style: none; padding: 0; }
+  .menue__feld a { display: block; padding-block: 0.7rem; color: var(--ink); text-decoration: none; font-weight: 600; border-block-end: 1px solid var(--line); }
+</style>

@@ -1,0 +1,315 @@
+---
+/**
+ * Startseite. Suchabsicht: „Entrümpelung Wien“, „Räumung Wien“, Marke.
+ * Verteilt auf die Leistungsseiten; jede davon bedient eine eigene Absicht.
+ */
+import Basis from '../layouts/Basis.astro';
+import Faq from '../components/Faq.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { company } from '../data/company';
+import { leistungen } from '../data/leistungen';
+import { artikel } from '../data/ratgeber';
+import { bezirke } from '../data/bezirke';
+import { preise } from '../data/preise';
+
+const raeumung = leistungen.filter((l) => l.gruppe === 'raeumung');
+const umzug = leistungen.filter((l) => l.gruppe === 'umzug');
+
+const schritte = [
+  { t: 'Anruf oder Nachricht', p: 'Sie sagen, was geräumt werden soll, wo es liegt und bis wann. Fotos per WhatsApp helfen.' },
+  { t: 'Besichtigung', p: 'Wir sehen uns alle Räume an, auch Keller und Dachboden, und klären, was bleibt.' },
+  { t: 'Schriftlicher Preis', p: 'Sie bekommen ein Angebot mit Umfang, Termin und Betrag. Erst dann entscheiden Sie.' },
+  { t: 'Räumung und Übergabe', p: 'Wir räumen, kehren durch und gehen mit Ihnen durch die leeren Räume.' },
+];
+
+const faq = [
+  {
+    q: 'Was ist der Unterschied zwischen Entrümpelung und Räumung?',
+    a: 'Im Alltag wird beides gleich verwendet. Von Entrümpelung spricht man eher, wenn einzelne Räume von Angesammeltem befreit werden. Eine Räumung meint meist die ganze Wohnung oder das ganze Haus bis zur besenreinen Übergabe.',
+  },
+  {
+    q: 'In welchen Bezirken arbeiten Sie?',
+    a: 'In allen 23 Wiener Bezirken und in den Gemeinden rund um Wien. Unser Standort ist in Simmering.',
+  },
+  {
+    q: 'Bekomme ich den Preis vor der Räumung?',
+    a: 'Ja, immer schriftlich und nach einer Besichtigung. Am Telefon nennen wir nur einen Rahmen, damit Sie einschätzen können, ob wir in Frage kommen.',
+  },
+  {
+    q: 'Können Sie räumen und gleichzeitig übersiedeln?',
+    a: 'Ja. Was Sie behalten, bringen wir zuerst an die neue Adresse. Danach wird die alte Wohnung geräumt. Beides steht in einem Angebot.',
+  },
+  {
+    q: 'Wie erreiche ich Sie am schnellsten?',
+    a: 'Telefonisch oder per WhatsApp. Auf das Formular melden wir uns am selben Tag.',
+  },
+];
+---
+<Basis
+  title="Entrümpelung & Räumung Wien, Umzug dazu | Räumerei"
+  description="Räumerei Wien: Entrümpelung, Wohnungsräumung und Haushaltsauflösung in allen 23 Bezirken, auf Wunsch mit Umzug. Besichtigung, schriftlicher Preis, besenrein."
+  canonicalPath="/"
+  faq={faq}
+>
+  <section class="hero">
+    <div class="wrap hero__innen">
+      <div class="hero__text">
+        <p class="eyebrow">Räumerei Wien</p>
+        <h1>Entrümpelung und Räumung in Wien</h1>
+        <p class="hero__claim">Voll hinein. Leer heraus.</p>
+        <p class="lead">
+          Wohnung, Haus, Keller oder Geschäft: Wir räumen aus, tragen hinunter und
+          übergeben besenrein. Was Sie behalten, übersiedeln wir gleich mit.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="#anfrage">Besichtigung vereinbaren</a>
+          <a class="btn btn--ghost" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+        </div>
+      </div>
+
+      {/* Ein leerer Raum mit offener Tür und Besen: das Ergebnis, nicht die Arbeit. */}
+      <svg class="hero__bild" viewBox="0 0 520 420" role="img" aria-label="Zeichnung eines leeren, gekehrten Zimmers mit offener Tür">
+        <rect x="6" y="6" width="508" height="408" rx="22" fill="#fff" stroke="#e4dacd" stroke-width="2" />
+        <path d="M30 390 160 280h200l130 110z" fill="#f5e6da" />
+        <g fill="none" stroke="#1d1a17" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M160 100h200v180H160z" />
+          <path d="M30 30 160 100M490 30 360 100M30 390 160 280M490 390 360 280" />
+          <path d="M225 135h70v80h-70zM260 135v80M225 175h70" />
+          <path d="M62 363V124l56 30v161" />
+          <path d="M108 248v8" />
+        </g>
+        <g stroke="#c2401c" stroke-width="2" opacity=".55">
+          <path d="M200 280 118 390M240 280 206 390M280 280 294 390M320 280 382 390" />
+        </g>
+        <path d="M62 363V124l56 30v161z" fill="#c2401c" opacity=".12" />
+        <g stroke-linecap="round">
+          <path d="M438 150 404 340" stroke="#1d1a17" stroke-width="5" />
+          <path d="M386 338h40l8 26h-58z" fill="#c2401c" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="wrap">
+      <ul class="fakten">
+        <li><strong>Besichtigung</strong> vor Ort, bevor ein Preis genannt wird</li>
+        <li><strong>Schriftliches Angebot</strong> mit Umfang, Termin und Betrag</li>
+        <li><strong>Besenrein</strong> übergeben, mit Fotos auf Wunsch</li>
+        <li><strong>Alle 23 Bezirke</strong> und das Wiener Umland</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Räumung</p>
+        <h2>Was wir in Wien räumen</h2>
+        <p class="lead">
+          Jede Räumung hat einen anderen Anlass. Wählen Sie den, der zu Ihrer Lage
+          passt: Dort steht, was dabei zu beachten ist.
+        </p>
+      </div>
+      <div class="grid grid--4">
+        {raeumung.map((l) => (
+          <a class="card" href={`/${l.slug}/`}>
+            <h3>{l.nav}</h3>
+            <p>{l.kurz}</p>
+            <span class="card__mehr">Mehr dazu</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="wrap umzug">
+      <div class="stack">
+        <p class="eyebrow">Umzug</p>
+        <h2>Und was bleibt, zieht mit um</h2>
+        <p class="lead">
+          Räumen und Übersiedeln sind bei uns ein Auftrag. Dasselbe Team bringt
+          Ihre Möbel an die neue Adresse und räumt danach die alte Wohnung.
+        </p>
+      </div>
+      <div class="grid">
+        {umzug.map((l) => (
+          <a class="umzug__zeile" href={`/${l.slug}/`}>
+            <span>
+              <strong>{l.nav}</strong>
+              <span class="muted">{l.kurz}</span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Ablauf</p>
+        <h2>Vier Schritte bis zum leeren Raum</h2>
+      </div>
+      <ol class="schritte">
+        {schritte.map((s, i) => (
+          <li>
+            <span class="schritte__nr" aria-hidden="true">{i + 1}</span>
+            <h3>{s.t}</h3>
+            <p>{s.p}</p>
+          </li>
+        ))}
+      </ol>
+      <p style="margin-block-start: var(--s-6);"><a href="/ablauf/">Der Ablauf im Einzelnen</a></p>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap preisblock">
+      <div class="stack">
+        <p class="eyebrow">Preise</p>
+        <h2>Womit Sie rechnen können</h2>
+        <p class="lead">
+          Richtwerte für Wien, inklusive Umsatzsteuer. Der Aufwand hängt an Menge,
+          Stockwerk und Lift, deshalb gibt es den verbindlichen Preis erst nach
+          der Besichtigung.
+        </p>
+        <p><a class="btn btn--ghost" href="/preise/">Alle Preise und was sie beeinflusst</a></p>
+      </div>
+      <div>
+        <table class="tabelle">
+          <thead><tr><th scope="col">Räumung</th><th scope="col">Richtwert</th></tr></thead>
+          <tbody>
+            {preise.raeumung.map((p) => <tr><td>{p.objekt}</td><td>{p.rahmen}</td></tr>)}
+          </tbody>
+        </table>
+        <p class="muted" style="font-size: var(--fs-0); margin-block-start: var(--s-3);">
+          Unverbindliche Richtwerte, kein Angebot. Verbindlich ist das schriftliche Angebot nach Besichtigung.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Einsatzgebiet</p>
+        <h2>Von der Inneren Stadt bis Liesing</h2>
+        <p class="lead">
+          Ein Altbau in der Josefstadt räumt sich anders als ein Reihenhaus in
+          der Donaustadt. Was in welchem Bezirk zählt, steht beim
+          <a href="/einsatzgebiet-wien/">Einsatzgebiet</a>.
+        </p>
+      </div>
+      <ul class="bezirksliste">
+        {bezirke.map((b) => (
+          <li><a href={`/einsatzgebiet-wien/#bezirk-${b.nr}`}><span>{b.plz}</span> {b.name}</a></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Ratgeber</p>
+        <h2>Gut zu wissen, bevor Sie anrufen</h2>
+      </div>
+      <div class="grid grid--4">
+        {artikel.map((a) => (
+          <a class="card" href={`/ratgeber/${a.slug}/`}>
+            <h3>{a.nav}</h3>
+            <p>{a.lead}</p>
+            <span class="card__mehr">Lesen</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wer">
+      <div class="stack">
+        <p class="eyebrow">Wer wir sind</p>
+        <h2>Räumerei, wie Tischlerei</h2>
+      </div>
+      <div class="stack">
+        <p class="lead">
+          Ein Handwerk mit einem Ergebnis: Der Raum ist leer und gekehrt. Hinter
+          der Marke steht ein Wiener Betrieb aus Simmering mit Gewerbeberechtigung
+          für Entrümpelung und Güterbeförderung.
+        </p>
+        <p>
+          Wir nennen keinen verbindlichen Preis für Räume, die wir nicht gesehen
+          haben, und wir schreiben nichts auf diese Website, was wir nicht belegen
+          können. <a href="/ueber-uns/">Mehr über den Betrieb und wie wir arbeiten</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap wrap--narrow">
+      <Faq fragen={faq} />
+    </div>
+  </section>
+
+  <Anfrage />
+</Basis>
+
+<style>
+  .hero { padding-block: var(--s-7) var(--s-8); }
+  .hero__innen { display: grid; gap: var(--s-7); align-items: center; }
+  @media (min-width: 62rem) { .hero__innen { grid-template-columns: 1.15fr 1fr; } }
+  .hero__text > * + * { margin-block-start: var(--s-5); }
+  .hero h1 { max-width: 14ch; }
+  .hero__claim {
+    font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3);
+    letter-spacing: -0.02em; color: var(--accent-dark);
+  }
+  .hero__bild { width: 100%; max-width: 34rem; justify-self: center; }
+
+  .fakten {
+    list-style: none; padding: 0; margin-block-start: var(--s-7);
+    display: grid; gap: 1px; background: var(--line);
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  }
+  @media (min-width: 40rem) { .fakten { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 62rem) { .fakten { grid-template-columns: repeat(4, 1fr); } }
+  .fakten li { background: var(--surface); padding: var(--s-5); color: var(--muted); font-size: 1rem; line-height: 1.45; }
+  .fakten strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.15rem; letter-spacing: -0.01em; margin-block-end: var(--s-1); }
+
+  .umzug { display: grid; gap: var(--s-7); }
+  @media (min-width: 62rem) { .umzug { grid-template-columns: 1fr 1.1fr; align-items: center; } }
+  .umzug__zeile {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-4);
+    padding: var(--s-5); border: 1px solid #ffffff2b; border-radius: var(--radius);
+    color: var(--on-dark); text-decoration: none; font-size: 1.4rem;
+    transition: background-color .15s, border-color .15s;
+  }
+  .umzug__zeile:hover { background: #ffffff10; border-color: #f2b9a3; }
+  .umzug__zeile strong { display: block; font-family: var(--font-head); font-size: 1.25rem; }
+  .umzug__zeile .muted { display: block; font-size: 1rem; }
+
+  .schritte { list-style: none; padding: 0; display: grid; gap: var(--s-6); counter-reset: s; }
+  @media (min-width: 40rem) { .schritte { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 62rem) { .schritte { grid-template-columns: repeat(4, 1fr); } }
+  .schritte li { border-block-start: 3px solid var(--ink); padding-block-start: var(--s-4); }
+  .schritte__nr { font-family: var(--font-head); font-weight: 800; font-size: 2.5rem; line-height: 1; color: var(--accent); }
+  .schritte h3 { font-size: 1.25rem; margin-block: var(--s-3) var(--s-2); }
+  .schritte p { color: var(--muted); font-size: 1rem; }
+
+  .wer { display: grid; gap: var(--s-5); }
+  @media (min-width: 62rem) { .wer { grid-template-columns: 1fr 1.4fr; gap: var(--s-8); } }
+
+  .preisblock { display: grid; gap: var(--s-7); }
+  @media (min-width: 62rem) { .preisblock { grid-template-columns: 1fr 1fr; align-items: center; } }
+
+  .bezirksliste { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr)); gap: var(--s-2); }
+  .bezirksliste a {
+    display: block; padding: 0.65rem 0.9rem; background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius-s); color: var(--ink); text-decoration: none; font-weight: 600;
+  }
+  .bezirksliste a:hover { border-color: var(--accent); }
+  .bezirksliste span { color: var(--accent-dark); font-variant-numeric: tabular-nums; margin-inline-end: 0.35rem; }
+</style>

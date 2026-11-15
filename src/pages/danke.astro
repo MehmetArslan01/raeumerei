@@ -1,0 +1,30 @@
+---
+import Basis from '../layouts/Basis.astro';
+import { company } from '../data/company';
+---
+<Basis
+  title="Anfrage eingegangen | Räumerei"
+  description="Ihre Anfrage ist bei der Räumerei eingegangen. Wir melden uns am selben Tag telefonisch, um die Besichtigung zu vereinbaren."
+  canonicalPath="/danke/"
+  noindex
+>
+  <section class="section">
+    <div class="wrap wrap--narrow stack">
+      <p class="eyebrow">Danke</p>
+      <h1>Ihre Anfrage ist bei uns</h1>
+      <p class="lead">
+        Wir melden uns {company.responseTime} unter der Nummer, die Sie angegeben
+        haben, und vereinbaren die Besichtigung.
+      </p>
+      <p>
+        Wenn es eilt, erreichen Sie uns unter
+        <a href={`tel:${company.phoneHref}`}><strong>{company.phoneDisplay}</strong></a>.
+      </p>
+      <p>
+        In der Zwischenzeit hilft die Liste
+        <a href="/ratgeber/entruempelung-vorbereiten/">Entrümpelung vorbereiten</a>.
+      </p>
+      <p><a class="btn btn--ghost" href="/">Zur Startseite</a></p>
+    </div>
+  </section>
+</Basis>

@@ -1,0 +1,82 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import Formular from '../../components/Formular.astro';
+import { company, whatsappUrl } from '../../data/company';
+const wa = whatsappUrl('Hello, I would like a quote for ');
+---
+<Basis
+  title="Contact: arrange a viewing in English | Räumerei"
+  description="Contact Räumerei Vienna in English: phone, WhatsApp, e-mail or form. We call back the same day and arrange a viewing of the rooms to be cleared."
+  canonicalPath="/en/contact/"
+  schema="contact"
+  breadcrumbs={[{ name: 'Home', url: '/en/' }, { name: 'Contact', url: '/en/contact/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1 style="margin-block-start: var(--s-4);">Arrange a viewing</h1>
+      <p class="lead">The phone is quickest. If you prefer to write, four details are enough and we call back the same day.</p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);" id="anfrage">
+    <div class="wrap kontakt">
+      <div>
+        <p class="meldung" id="fehler-pflichtfelder" role="alert">Please fill in all required fields and tick the consent box.</p>
+        <p class="meldung" id="fehler-format" role="alert">The enquiry could not be read. Please try again.</p>
+        <p class="meldung" id="fehler-zuviele" role="alert">A lot of enquiries came from your connection. Please call us instead.</p>
+        <p class="meldung" id="fehler-versand" role="alert">The enquiry could not be delivered just now. Please call {company.phoneDisplay}.</p>
+        <h2 style="margin-block-end: var(--s-5);">Write to us</h2>
+        <Formular />
+      </div>
+
+      <aside class="stack-l" aria-label="Direct contact">
+        <div class="kasten kasten--akzent stack">
+          <h2>Phone</h2>
+          <p><a class="gross" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></p>
+          <p class="muted">We speak English and German.</p>
+        </div>
+        {wa && (
+          <div class="kasten stack">
+            <h2>WhatsApp</h2>
+            <p>Send photos of the rooms. That lets us narrow down the range before the viewing.</p>
+            <p><a class="btn btn--ghost" href={wa} rel="noopener">Open WhatsApp</a></p>
+          </div>
+        )}
+        <div class="kasten stack">
+          <h2>E-mail</h2>
+          <p><a href={`mailto:${company.email}`} style="overflow-wrap:anywhere;">{company.email}</a></p>
+        </div>
+        <div class="kasten stack">
+          <h2>We come to you</h2>
+          <p class="muted">
+            Räumerei has no customer office. Viewings take place at your
+            address, anywhere in Vienna. The business address is in the
+            <a href="/impressum/">legal notice (in German)</a>.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <h2 style="margin-block-start:0;">What we ask on the phone</h2>
+      <ul>
+        <li>What is to be cleared or moved: flat, house, cellar, office?</li>
+        <li>Which district and which floor?</li>
+        <li>Is there a lift, and how big is it?</li>
+        <li>Is there a date that has to be met, such as a handover or a flight?</li>
+        <li>Should anything come along or be taken to someone?</li>
+      </ul>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .kontakt { display: grid; gap: var(--s-7); }
+  @media (min-width: 62rem) { .kontakt { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+  .gross { font-family: var(--font-head); font-weight: 800; font-size: 1.75rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .meldung { display: none; margin-block-end: var(--s-5); padding: var(--s-4); border-radius: var(--radius-s); background: #fbe9e6; color: var(--error); font-weight: 700; scroll-margin-top: 6rem; }
+  .meldung:target { display: block; }
+</style>

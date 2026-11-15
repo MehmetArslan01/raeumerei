@@ -1,0 +1,30 @@
+---
+/**
+ * Zeichen: ein Raum im Grundriss, an einer Ecke offen — die Tür, durch die
+ * alles hinausgeht. Dieselbe Geometrie wie favicon.svg.
+ */
+interface Props { hell?: boolean }
+const { hell = false } = Astro.props;
+---
+<span class:list={['logo', { 'logo--hell': hell }]}>
+  <svg viewBox="0 0 64 64" width="38" height="38" aria-hidden="true" focusable="false">
+    <rect width="64" height="64" rx="15" class="logo__feld" />
+    <path d="M42 17H17v30h30V28" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+  <span class="logo__wort">Räumerei<span class="logo__ort">Wien</span></span>
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 0.65rem; color: var(--ink); }
+  .logo__feld { fill: var(--accent); }
+  .logo__wort {
+    display: grid; font-family: var(--font-head); font-weight: 800; font-size: 1.4rem;
+    letter-spacing: -0.035em; line-height: 1;
+  }
+  .logo__ort {
+    font-family: var(--font-body); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--muted); margin-block-start: 0.2rem;
+  }
+  .logo--hell { color: var(--on-dark); }
+  .logo--hell .logo__ort { color: var(--on-dark-muted); }
+</style>

@@ -1,0 +1,72 @@
+---
+import SeoHead from '../components/SeoHead.astro';
+import JsonLd from '../components/JsonLd.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyBar from '../components/StickyBar.astro';
+import { sprache } from '../data/i18n';
+import '../styles/global.css';
+
+interface Crumb { name: string; url: string; }
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: 'website' | 'service' | 'article' | 'contact';
+  priceCatalog?: boolean;
+  serviceName?: string;
+  serviceDescription?: string;
+  breadcrumbs?: Crumb[];
+  faq?: { q: string; a: string }[];
+  article?: { headline: string; description: string; published: string; modified?: string };
+}
+
+const {
+  title, description, canonicalPath, type = 'website', noindex = false, schema = 'website',
+  priceCatalog = false, serviceName, serviceDescription, breadcrumbs, faq, article,
+} = Astro.props;
+
+/* Sprache ergibt sich aus dem Pfad: alles unter /en/ ist englisch. */
+const locale = sprache(canonicalPath ?? Astro.url.pathname);
+const en = locale === 'en';
+---
+<!doctype html>
+<html lang={en ? 'en' : 'de-AT'}>
+  <head>
+    <SeoHead
+      title={title} description={description} canonicalPath={canonicalPath} type={type}
+      noindex={noindex} published={article?.published} modified={article?.modified}
+    />
+    <JsonLd
+      type={schema} priceCatalog={priceCatalog} serviceName={serviceName}
+      serviceDescription={serviceDescription} breadcrumbs={breadcrumbs} faq={faq} article={article}
+    />
+  </head>
+  <body>
+    <a href="#inhalt" class="skip-link">{en ? 'Skip to content' : 'Zum Inhalt springen'}</a>
+    <Header />
+
+    {breadcrumbs && breadcrumbs.length > 1 && (
+      <nav class="crumbs wrap" aria-label={en ? 'Breadcrumb' : 'Brotkrumennavigation'}>
+        <ol>
+          {breadcrumbs.map((c, i) => (
+            <li>
+              {i === breadcrumbs.length - 1
+                ? <span aria-current="page">{c.name}</span>
+                : <a href={c.url}>{c.name}</a>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <main id="inhalt">
+      <slot />
+    </main>
+
+    <Footer />
+    <StickyBar />
+  </body>
+</html>

@@ -1,0 +1,24 @@
+---
+import Basis from '../layouts/Basis.astro';
+import { leistungen } from '../data/leistungen';
+---
+<Basis
+  title="Seite nicht gefunden | Räumerei"
+  description="Diese Seite gibt es bei der Räumerei nicht oder nicht mehr. Hier finden Sie die Wege zu Entrümpelung, Räumung, Umzug, Preisen und Kontakt."
+  noindex
+>
+  <section class="section">
+    <div class="wrap wrap--narrow stack">
+      <p class="eyebrow">Fehler 404</p>
+      <h1>Hier ist schon geräumt</h1>
+      <p class="lead">Diese Seite gibt es nicht oder nicht mehr. Vielleicht suchen Sie eine davon:</p>
+      <ul class="prose" style="padding-inline-start: 1.25rem;">
+        {leistungen.slice(0, 4).map((l) => <li><a href={`/${l.slug}/`}>{l.nav}</a></li>)}
+        <li><a href="/umzug-wien/">Umzug Wien</a></li>
+        <li><a href="/preise/">Preise</a></li>
+        <li><a href="/kontakt/">Kontakt</a></li>
+      </ul>
+      <p><a class="btn" href="/">Zur Startseite</a></p>
+    </div>
+  </section>
+</Basis>

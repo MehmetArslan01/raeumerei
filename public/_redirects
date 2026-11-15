@@ -1,0 +1,44 @@
+# Cloudflare Workers Static Assets — Weiterleitungen.
+# http→https und www→ohne www werden in Cloudflare selbst geregelt.
+
+# Umlaut-Schreibweisen
+/entrümpelung-wien            /entruempelung-wien/              301
+/wohnungsräumung-wien         /wohnungsraeumung-wien/           301
+/haushaltsauflösung-wien      /haushaltsaufloesung-wien/        301
+/verlassenschaftsräumung-wien /verlassenschaftsraeumung-wien/   301
+/hausräumung-wien             /hausraeumung-wien/               301
+/geschäftsräumung-wien        /geschaeftsraeumung-wien/         301
+/über-uns                     /ueber-uns/                       301
+
+# Naheliegende Kurzformen: immer auf die Seite mit derselben Absicht.
+/entruempelung                /entruempelung-wien/              301
+/raeumung                     /entruempelung-wien/              301
+/raeumung-wien                /entruempelung-wien/              301
+/wohnungsraeumung             /wohnungsraeumung-wien/           301
+/wohnungsaufloesung-wien      /haushaltsaufloesung-wien/        301
+/haushaltsaufloesung          /haushaltsaufloesung-wien/        301
+/verlassenschaft-wien         /verlassenschaftsraeumung-wien/   301
+/keller-entruempeln-wien      /keller-dachboden-raeumen-wien/   301
+/kellerentruempelung-wien     /keller-dachboden-raeumen-wien/   301
+/dachboden-raeumen-wien       /keller-dachboden-raeumen-wien/   301
+/messie-wien                  /messie-raeumung-wien/            301
+/bueroraeumung-wien           /geschaeftsraeumung-wien/         301
+/umzug                        /umzug-wien/                      301
+/uebersiedlung-wien           /umzug-wien/                      301
+/umzug-mit-entruempelung-wien /raeumung-und-umzug-wien/         301
+/kosten                       /preise/                          301
+/bezirke                      /einsatzgebiet-wien/              301
+
+# Englischer Zweig: naheliegende Eingaben.
+/english                      /en/                              301
+/en/home                      /en/                              301
+/en/house-clearance           /en/house-clearance-vienna/       301
+/en/clearance-vienna          /en/house-clearance-vienna/       301
+/en/moving                    /en/moving-vienna/                301
+/en/movers-vienna             /en/moving-vienna/                301
+/en/pricing                   /en/prices/                       301
+/en/imprint                   /impressum/                       301
+/en/privacy                   /datenschutz/                     301
+
+# Platzhalter-Regeln zuletzt.
+/blog/*                       /ratgeber/                        301

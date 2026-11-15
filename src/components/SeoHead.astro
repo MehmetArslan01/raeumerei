@@ -1,0 +1,79 @@
+---
+/**
+ * Metadaten, verpflichtend auf jeder Seite. scripts/seo-lint.mjs prüft nach
+ * dem Build Title, Description, Canonical und H1.
+ */
+import { company } from '../data/company';
+import { gegenstueck, sprache } from '../data/i18n';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  published?: string;
+  modified?: string;
+}
+
+const { title, description, canonicalPath, type = 'website', noindex = false, published, modified } = Astro.props;
+const basis = Astro.site ?? company.siteUrl;
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, basis).href;
+const ogImage = new URL('/og/standard.png', basis).href;
+
+const pfad = canonicalPath ?? Astro.url.pathname;
+const en = sprache(pfad) === 'en';
+/* hreflang nur für echte Paare; sonst verweist die Seite auf sich selbst. */
+const paar = gegenstueck(pfad);
+const alternativen = paar
+  ? [
+      { hreflang: 'de-at', href: new URL(paar.de, basis).href },
+      { hreflang: 'en', href: new URL(paar.en, basis).href },
+      { hreflang: 'x-default', href: new URL(paar.de, basis).href },
+    ]
+  : [
+      { hreflang: en ? 'en' : 'de-at', href: canonical },
+      { hreflang: 'x-default', href: canonical },
+    ];
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta
+  name="robots"
+  content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1'}
+/>
+
+{alternativen.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={company.brand} />
+<meta property="og:locale" content={en ? 'en_GB' : 'de_AT'} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={en ? `${company.brand} — house clearance and moving in Vienna` : `${company.brand} — Entrümpelung, Räumung und Umzug in Wien`} />
+{published && <meta property="article:published_time" content={published} />}
+{modified && <meta property="article:modified_time" content={modified} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<meta name="theme-color" content="#faf6f0" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />

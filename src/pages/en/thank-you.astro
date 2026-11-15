@@ -1,0 +1,20 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import { company } from '../../data/company';
+---
+<Basis
+  title="Enquiry received | Räumerei"
+  description="Your enquiry has reached Räumerei Vienna. We call back the same day on the number you gave to arrange the viewing."
+  canonicalPath="/en/thank-you/"
+  noindex
+>
+  <section class="section">
+    <div class="wrap wrap--narrow stack">
+      <p class="eyebrow">Thank you</p>
+      <h1>We have your enquiry</h1>
+      <p class="lead">We call back the same day on the number you gave and arrange the viewing.</p>
+      <p>If it is urgent, call <a href={`tel:${company.phoneHref}`}><strong>{company.phoneDisplay}</strong></a>.</p>
+      <p><a class="btn btn--ghost" href="/en/">Back to the home page</a></p>
+    </div>
+  </section>
+</Basis>

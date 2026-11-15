@@ -1,0 +1,107 @@
+---
+/**
+ * Impressum nach § 5 ECG und § 24/25 MedienG. Alle Angaben aus
+ * src/data/company.ts. Rechtstext vom bestehenden Auftritt desselben Betriebs
+ * übernommen; ergänzt um den Hinweis, dass „Räumerei“ eine Marke ist.
+ */
+import Basis from '../layouts/Basis.astro';
+import { company, addressLine } from '../data/company';
+---
+
+<Basis
+  title={`Impressum | ${company.brand}`}
+  description="Anbieterkennzeichnung nach § 5 ECG und Offenlegung nach § 25 MedienG: Firma, Anschrift, UID, Firmenbuch, Gewerbeberechtigung und Behörde."
+  canonicalPath="/impressum/"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Impressum', url: '/impressum/' }]}
+>
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <h1>Impressum</h1>
+      <p class="lead" style="margin-block-start: var(--s-4);">
+        Angaben nach § 5 E-Commerce-Gesetz und § 24 Mediengesetz.
+      </p>
+
+      <div class="prose" style="margin-block-start: var(--s-6);">
+        <h2>Medieninhaber und Diensteanbieter</h2>
+        <p>
+          {company.name}<br />
+          Inhaber: {company.owner}<br />
+          „{company.brand}“ ist die Bezeichnung dieses Auftritts, kein eigener Rechtsträger.<br />
+          {addressLine()}<br />
+          {company.address.country}
+        </p>
+
+        <h2>Kontakt</h2>
+        <p>
+          Telefon: <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a><br />
+          E-Mail: <a href={`mailto:${company.email}`}>{company.email}</a>
+        </p>
+
+        <h2>Unternehmensdaten</h2>
+        <p>
+          Rechtsform: {company.legalForm}<br />
+          Umsatzsteuer-Identifikationsnummer: {company.vatId}<br />
+          {/* Einzelunternehmen ohne Firmenbucheintrag: Zeilen entfallen,
+              statt leer oder mit Platzhalter zu erscheinen. */}
+          {company.companyRegister && (
+            <>Firmenbuchnummer: {company.companyRegister}<br /></>
+          )}
+          {company.companyRegisterCourt && (
+            <>Firmenbuchgericht: {company.companyRegisterCourt}<br /></>
+          )}
+          Unternehmensgegenstand: {company.trades.join(', ')}
+        </p>
+
+        <h2>Gewerberecht</h2>
+        <p>
+          Gewerbeberechtigung: {company.trades.join(', ')}<br />
+          Gewerbebehörde: {company.tradeAuthority}<br />
+          Mitgliedschaft: {company.chamber}<br />
+          Anwendbare Rechtsvorschrift: Gewerbeordnung,
+          abrufbar über das <a href={company.professionalLawUrl} rel="noopener">Rechtsinformationssystem des Bundes (RIS)</a>
+        </p>
+
+        <h2>Offenlegung nach § 25 Mediengesetz</h2>
+        <p>
+          Medieninhaber und Herausgeber: {company.name}, {addressLine()}.<br />
+          Grundlegende Richtung: Information über die Leistungen des Unternehmens
+          in den Bereichen Entrümpelung, Räumung, Umzug und Transport sowie
+          Praxisinformationen für Kundinnen und Kunden in Wien.
+        </p>
+
+        <h2>Online-Streitbeilegung</h2>
+        <p>
+          Verbraucher haben die Möglichkeit, Beschwerden an die
+          Online-Streitbeilegungsplattform der Europäischen Kommission zu richten.
+          Sie können Beschwerden auch an die oben angegebene E-Mail-Adresse richten.
+        </p>
+
+        <h2>Haftung für Inhalte</h2>
+        <p>
+          Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Für die
+          Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch
+          keine Gewähr übernommen werden. Rechtliche Hinweise auf dieser Website
+          ersetzen keine Rechtsberatung im Einzelfall.
+        </p>
+
+        <h2>Haftung für Links</h2>
+        <p>
+          Diese Website enthält Links zu externen Websites Dritter, auf deren
+          Inhalte kein Einfluss besteht. Für die Inhalte der verlinkten Seiten
+          ist stets der jeweilige Anbieter verantwortlich.
+        </p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+          Die auf dieser Website veröffentlichten Inhalte unterliegen dem
+          österreichischen Urheberrecht. Eine Vervielfältigung oder Verwendung
+          bedarf der schriftlichen Zustimmung des Medieninhabers.
+        </p>
+      </div>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .prose h2 { margin-block-start: var(--s-7); font-size: var(--fs-2); }
+</style>

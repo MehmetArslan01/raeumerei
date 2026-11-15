@@ -1,0 +1,86 @@
+---
+import Basis from '../layouts/Basis.astro';
+import Formular from '../components/Formular.astro';
+import { company, whatsappUrl } from '../data/company';
+const wa = whatsappUrl();
+---
+<Basis
+  title="Kontakt: Besichtigung vereinbaren | Räumerei"
+  description="Kontakt zur Räumerei Wien: Telefon, WhatsApp, E-Mail oder Formular. Wir melden uns am selben Tag und vereinbaren eine kostenlose Besichtigung."
+  canonicalPath="/kontakt/"
+  schema="contact"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Kontakt', url: '/kontakt/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Kontakt</p>
+      <h1 style="margin-block-start: var(--s-4);">Besichtigung vereinbaren</h1>
+      <p class="lead">
+        Am schnellsten geht es am Telefon. Wenn Sie lieber schreiben: Vier
+        Angaben genügen, und wir rufen {company.responseTime} zurück.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);" id="anfrage">
+    <div class="wrap kontakt">
+      <div>
+        {/* Meldungen des Formular-Endpunkts: sichtbar nur über den Anker (:target). */}
+        <p class="meldung" id="fehler-pflichtfelder" role="alert">Bitte füllen Sie alle Pflichtfelder aus und stimmen Sie der Verarbeitung zu.</p>
+        <p class="meldung" id="fehler-format" role="alert">Die Anfrage konnte nicht gelesen werden. Bitte versuchen Sie es noch einmal.</p>
+        <p class="meldung" id="fehler-zuviele" role="alert">Von Ihrem Anschluss kamen sehr viele Anfragen. Bitte rufen Sie uns an.</p>
+        <p class="meldung" id="fehler-versand" role="alert">Die Anfrage konnte gerade nicht zugestellt werden. Bitte rufen Sie an unter {company.phoneDisplay}.</p>
+        <h2 style="margin-block-end: var(--s-5);">Anfrage schreiben</h2>
+        <Formular />
+      </div>
+
+      <aside class="stack-l" aria-label="Direkter Kontakt">
+        <div class="kasten kasten--akzent stack">
+          <h2>Telefon</h2>
+          <p><a class="gross" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a></p>
+          <p class="muted">{company.hours.text}.</p>
+        </div>
+        {wa && (
+          <div class="kasten stack">
+            <h2>WhatsApp</h2>
+            <p>Schicken Sie Fotos der Räume mit. Damit lässt sich der Rahmen schon vor der Besichtigung eingrenzen.</p>
+            <p><a class="btn btn--ghost" href={wa} rel="noopener">WhatsApp öffnen</a></p>
+          </div>
+        )}
+        <div class="kasten stack">
+          <h2>E-Mail</h2>
+          <p><a href={`mailto:${company.email}`} style="overflow-wrap:anywhere;">{company.email}</a></p>
+        </div>
+        <div class="kasten stack">
+          <h2>Wir kommen zu Ihnen</h2>
+          <p class="muted">
+            Die Räumerei hat kein Kundenbüro. Besichtigt wird bei Ihnen, in ganz
+            Wien und im Umland. Die Geschäftsanschrift steht im <a href="/impressum/">Impressum</a>.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <h2 style="margin-block-start:0;">Was wir am Telefon fragen</h2>
+      <ul>
+        <li>Was soll geräumt oder übersiedelt werden: Wohnung, Haus, Keller, Geschäft?</li>
+        <li>In welchem Bezirk und in welchem Stockwerk?</li>
+        <li>Gibt es einen Lift, und wie groß ist er?</li>
+        <li>Gibt es einen Termin, der eingehalten werden muss?</li>
+        <li>Soll etwas mitkommen oder zu jemandem gebracht werden?</li>
+      </ul>
+      <p>Wie es danach weitergeht, steht unter <a href="/ablauf/">Ablauf</a>.</p>
+    </div>
+  </section>
+</Basis>
+
+<style>
+  .kontakt { display: grid; gap: var(--s-7); }
+  @media (min-width: 62rem) { .kontakt { grid-template-columns: 1.2fr 1fr; align-items: start; } }
+  .gross { font-family: var(--font-head); font-weight: 800; font-size: 1.75rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .meldung { display: none; margin-block-end: var(--s-5); padding: var(--s-4); border-radius: var(--radius-s); background: #fbe9e6; color: var(--error); font-weight: 700; scroll-margin-top: 6rem; }
+  .meldung:target { display: block; }
+</style>

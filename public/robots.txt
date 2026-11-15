@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /danke/
+Disallow: /en/thank-you/
+Disallow: /api/
+
+Sitemap: https://raeumerei.at/sitemap-index.xml

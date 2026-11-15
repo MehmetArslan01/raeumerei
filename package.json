@@ -1,0 +1,35 @@
+{
+  "name": "raeumerei",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "check": "astro check",
+    "build": "npm run lint:legal:src && astro build && npm run lint:legal:dist && npm run lint:seo && npm run lint:links",
+    "build:fast": "astro build",
+    "preview": "wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "cf:typegen": "wrangler types",
+    "lint:legal:src": "node scripts/legal-lint.mjs src",
+    "lint:legal:dist": "node scripts/legal-lint.mjs dist/client",
+    "lint:style": "node scripts/style-lint.mjs src",
+    "lint:seo": "node scripts/seo-lint.mjs dist/client",
+    "lint:links": "node scripts/link-check.mjs dist/client",
+    "lint:placeholders": "node scripts/placeholder-check.mjs dist/client",
+    "audit:all": "npm run lint:legal:dist && npm run lint:seo && npm run lint:links && npm run lint:style && npm run lint:placeholders"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.2.1",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.2.2",
+    "mimetext": "^3.0.28",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.7.2",
+    "wrangler": "^4.123.0"
+  }
+}

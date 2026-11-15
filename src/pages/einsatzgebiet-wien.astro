@@ -1,0 +1,89 @@
+---
+/**
+ * Einsatzgebiet: alle 23 Bezirke auf EINER Seite, jeder mit dem, was dort
+ * für eine Räumung praktisch zählt. Keine Serie fast gleicher Bezirksseiten.
+ */
+import Basis from '../layouts/Basis.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { bezirke } from '../data/bezirke';
+---
+<Basis
+  title="Entrümpelung in allen Wiener Bezirken | Räumerei"
+  description="Einsatzgebiet der Räumerei: Entrümpelung, Räumung und Umzug in allen 23 Wiener Bezirken von 1010 bis 1230 und im Umland. Was je Bezirk zu beachten ist."
+  canonicalPath="/einsatzgebiet-wien/"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Einsatzgebiet Wien', url: '/einsatzgebiet-wien/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Einsatzgebiet</p>
+      <h1 style="margin-block-start: var(--s-4);">Räumung in allen 23 Wiener Bezirken</h1>
+      <p class="lead">
+        Wir fahren von Simmering aus in jeden Bezirk und ins Umland. Der Bezirk
+        ändert nichts am Preis, wohl aber die Bauart: Lift, Stiegenhaus, Zufahrt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap">
+      <div class="kopf">
+        <h2>Was in welchem Bezirk zählt</h2>
+        <p class="muted">
+          Aus der Bauweise ergibt sich, wie getragen wird und wo ein Fahrzeug
+          stehen kann. Die Hinweise ersetzen keine Besichtigung, zeigen aber,
+          worauf wir dort als Erstes achten.
+        </p>
+      </div>
+      <ul class="bz">
+        {bezirke.map((b) => (
+          <li id={`bezirk-${b.nr}`}>
+            <span class="bz__plz">{b.plz}</span>
+            <h3>{b.nr}. Bezirk, {b.name}</h3>
+            <p>{b.notiz}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow prose">
+      <h2 style="margin-block-start:0;">Rund um Wien</h2>
+      <p>
+        Im Umland räumen und übersiedeln wir ebenfalls, etwa in Schwechat,
+        Klosterneuburg, Perchtoldsdorf, Mödling, Purkersdorf und Gerasdorf. Dort
+        geht es meist um Einfamilienhäuser mit Keller, Dachboden und Garage.
+        Mehr dazu auf der Seite zur <a href="/hausraeumung-wien/">Hausräumung</a>.
+      </p>
+      <p>
+        Weitere Strecken innerhalb Österreichs sind bei einem
+        <a href="/umzug-wien/">Umzug</a> möglich und werden im Einzelfall besprochen.
+      </p>
+      <h2>Zufahrt und Halten</h2>
+      <p>
+        In den inneren Bezirken entscheidet der Stellplatz über die Dauer. Wo
+        Kurzparkzone, Anrainerparken oder Fußgängerzone gelten, klären wir vor
+        dem Termin, wie und wann geladen werden darf. Für eine Halteverbotszone
+        ist die MA 46 zuständig.
+      </p>
+      <p class="disclaimer">
+        <strong>Angaben ohne Gewähr.</strong> Regeln für Zufahrt, Ladezeiten und
+        Halteverbotszonen legt die Stadt Wien fest und kann sie ändern.
+        Verbindlich ist die Auskunft der zuständigen Stelle.
+      </p>
+    </div>
+  </section>
+
+  <Anfrage titel="Nennen Sie uns Bezirk und Stockwerk" text="Damit können wir am Telefon schon einen Rahmen nennen. Die Besichtigung folgt, wenn er für Sie passt." />
+</Basis>
+
+<style>
+  .bz { list-style: none; padding: 0; display: grid; gap: var(--s-4); }
+  @media (min-width: 46rem) { .bz { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 70rem) { .bz { grid-template-columns: repeat(3, 1fr); } }
+  .bz li { background: var(--bg); border-radius: var(--radius); padding: var(--s-5); scroll-margin-top: 6rem; }
+  .bz li:target { outline: 3px solid var(--accent); }
+  .bz__plz { font-family: var(--font-head); font-weight: 800; font-size: 1.6rem; color: var(--accent); letter-spacing: -0.02em; }
+  .bz h3 { font-size: 1.15rem; margin-block: var(--s-1) var(--s-2); }
+  .bz p { color: var(--muted); font-size: 1rem; line-height: 1.5; }
+</style>

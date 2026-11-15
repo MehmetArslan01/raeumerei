@@ -1,0 +1,47 @@
+{
+  // Cloudflare Workers mit Static Assets.
+  //
+  // Alle Inhaltsseiten sind vorgerendert und werden als statische Dateien
+  // ausgeliefert, ohne den Worker zu starten. Nur /api/anfrage läuft im
+  // Worker (`export const prerender = false` in der Datei).
+  //
+  // `main` und `assets` stehen bewusst NICHT hier: Der Astro-Adapter erzeugt
+  // beim Build eine eigene Worker-Konfiguration und trägt sie selbst ein.
+  // Siehe docs/07-technische-architektur.md.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "raeumerei",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Öffentliche Variablen. Hier gehören KEINE Geheimnisse hinein.
+  "vars": {
+    // Absenderadresse des Anfrageformulars. Muss auf einer Domain in diesem
+    // Cloudflare-Konto liegen. Ein Postfach dafür ist nicht nötig, die
+    // Adresse wird nur zum Versenden verwendet.
+    "MAIL_FROM": "anfrage@raeumerei.at",
+    // Zieladresse. Muss mit destination_address unten übereinstimmen.
+    "MAIL_TO": "mehmetarslan.business@hotmail.com"
+  },
+
+  // Versand über Cloudflare Email Routing. Kein Drittanbieter, kein
+  // API-Schlüssel, kostenlos. Voraussetzungen:
+  //   1. Email Routing für die Domain aktivieren
+  //   2. Die Zieladresse unten als Destination verifizieren
+  //      (Cloudflare schickt dorthin eine Bestätigungsmail)
+  // Siehe docs/12-deployment-cloudflare.md
+  "send_email": [
+    {
+      "name": "ANFRAGE_MAIL",
+      "destination_address": "mehmetarslan.business@hotmail.com"
+    }
+  ]
+
+  // Optionales Rate-Limit für das Formular. Namespace anlegen mit
+  //   npx wrangler kv namespace create ANFRAGE_LIMIT
+  // und die ausgegebene ID hier eintragen:
+  // "kv_namespaces": [{ "binding": "ANFRAGE_LIMIT", "id": "<ID>" }]
+}

@@ -1,0 +1,95 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import Faq from '../../components/Faq.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import { artikel, type Beitrag } from '../../data/ratgeber';
+import { leistung as finde } from '../../data/leistungen';
+import { company } from '../../data/company';
+
+export function getStaticPaths() {
+  return artikel.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+
+interface Props { a: Beitrag }
+const { a } = Astro.props;
+const pfad = `/ratgeber/${a.slug}/`;
+const datum = new Date(a.datum).toLocaleDateString('de-AT', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Basis
+  title={a.title}
+  description={a.description}
+  canonicalPath={pfad}
+  type="article"
+  schema="article"
+  article={{ headline: a.h1, description: a.description, published: a.datum }}
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Ratgeber', url: '/ratgeber/' }, { name: a.nav, url: pfad }]}
+  faq={a.faq}
+>
+  <article>
+    <header class="seitenkopf">
+      <div class="wrap wrap--narrow">
+        <p class="eyebrow">Ratgeber</p>
+        <h1 style="margin-block-start: var(--s-4); max-width: 22ch;">{a.h1}</h1>
+        <p class="lead">{a.lead}</p>
+        <p class="muted" style="margin-block-start: var(--s-4); font-size: var(--fs-0);">
+          Von {company.author} · <time datetime={a.datum}>{datum}</time> · Lesezeit {a.lesezeit}
+        </p>
+      </div>
+    </header>
+
+    <section class="section section--surface" style="padding-block-start: var(--s-7);">
+      <div class="wrap wrap--narrow prose">
+        <nav class="inhalt" aria-label="Inhalt dieses Beitrags">
+          <p><strong>Inhalt</strong></p>
+          <ol>
+            {a.abschnitte.map((s, i) => <li><a href={`#abschnitt-${i + 1}`}>{s.h2}</a></li>)}
+          </ol>
+        </nav>
+
+        {a.abschnitte.map((s, i) => (
+          <>
+            <h2 id={`abschnitt-${i + 1}`}>{s.h2}</h2>
+            {s.text.map((t) => <p set:html={t} />)}
+            {s.liste && <ul>{s.liste.map((p) => <li>{p}</li>)}</ul>}
+          </>
+        ))}
+
+        <p class="disclaimer" style="margin-block-start: var(--s-7);">
+          <strong>Angaben ohne Gewähr.</strong> Dieser Beitrag gibt einen allgemeinen
+          Überblick und ersetzt keine Rechtsberatung. Fristen, Gebühren und
+          Zuständigkeiten können sich ändern. Verbindlich ist die Auskunft der
+          zuständigen Stelle, bei mietrechtlichen Fragen beraten Mietervereinigung
+          und Arbeiterkammer.
+        </p>
+      </div>
+    </section>
+  </article>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <Faq fragen={a.faq} titel="Kurz gefragt" />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf"><p class="eyebrow">Wenn Sie es abgeben möchten</p><h2>Passende Leistungen</h2></div>
+      <div class="grid grid--3">
+        {a.leistungen.map(finde).map((v) => (
+          <a class="card" href={`/${v.slug}/`}>
+            <h3>{v.nav}</h3>
+            <p>{v.kurz}</p>
+            <span class="card__mehr">Zur Seite</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Anfrage />
+</Basis>
+
+<style>
+  .inhalt { background: var(--bg); border-radius: var(--radius); padding: var(--s-5); }
+  .inhalt ol { margin-block-start: var(--s-2); }
+</style>

@@ -1,0 +1,159 @@
+---
+/**
+ * Englische Startseite. Eigenständig geschrieben für Leute, die in Wien
+ * leben oder Wien verlassen und das hiesige System nicht kennen.
+ */
+import Basis from '../../layouts/Basis.astro';
+import Faq from '../../components/Faq.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import { company } from '../../data/company';
+import { servicesEn } from '../../data/services-en';
+
+const steps = [
+  { t: 'Call or message', p: 'Tell us what needs clearing or moving, where it is and by when. Photos on WhatsApp help.' },
+  { t: 'Viewing', p: 'We look at every room, cellar included, and agree on what stays.' },
+  { t: 'Written price', p: 'You receive a quote with scope, date and amount. Only then do you decide.' },
+  { t: 'Clearance and handover', p: 'We clear, sweep through and walk the empty rooms with you, or send photos.' },
+];
+
+const faq = [
+  {
+    q: 'Can everything be handled in English?',
+    a: 'Yes: the first call, the viewing, the written quote and the handover. Only the legal notice and privacy policy of this website are in German.',
+  },
+  {
+    q: 'Which parts of Vienna do you cover?',
+    a: 'All 23 districts and the towns around Vienna. We are based in Simmering, the 11th district.',
+  },
+  {
+    q: 'Do I get the price before the work starts?',
+    a: 'Always, in writing and after a viewing. On the phone we only give a range so you can judge whether we are an option.',
+  },
+  {
+    q: 'I am leaving Austria. Can you clear the flat after I have gone?',
+    a: 'Yes. We work with a person you trust or with the property manager, send photos of every room and return the keys to whoever you name.',
+  },
+  {
+    q: 'What is the quickest way to reach you?',
+    a: 'By phone or WhatsApp. If you use the form, we call back the same day.',
+  },
+];
+---
+<Basis
+  title="House Clearance & Moving in Vienna, in English | Räumerei"
+  description="Räumerei Vienna: house clearance and moving with English-speaking contact. Viewing first, written price, rooms handed back swept. All 23 districts."
+  canonicalPath="/en/"
+  faq={faq}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Räumerei Vienna</p>
+      <h1>House clearance and moving in Vienna</h1>
+      <p class="hero__claim">Full going in. Empty coming out.</p>
+      <p class="lead">
+        Flat, house, cellar or office: we clear it, carry everything down and
+        hand the rooms back swept. What you keep, we move for you. And we do
+        all of it in English.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="#anfrage">Arrange a viewing</a>
+        <a class="btn btn--ghost" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+      </div>
+
+      <ul class="fakten">
+        <li><strong>English spoken</strong> from the first call to the handover</li>
+        <li><strong>Viewing first</strong> before any price is named</li>
+        <li><strong>Written quote</strong> with scope, date and amount</li>
+        <li><strong>All 23 districts</strong> and the area around Vienna</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Services</p>
+        <h2>What we do</h2>
+      </div>
+      <div class="grid grid--3">
+        {servicesEn.map((l) => (
+          <a class="card" href={`/en/${l.slug}/`}>
+            <h3>{l.nav}</h3>
+            <p>{l.kurz}</p>
+            <span class="card__mehr">Read more</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="wrap zwei">
+      <div class="stack">
+        <p class="eyebrow">Good to know</p>
+        <h2>Vienna works a little differently</h2>
+      </div>
+      <div class="stack">
+        <p class="lead">
+          Flats come with a cellar compartment that must be emptied too. Old
+          buildings often have no lift. Landlords expect the flat “besenrein”,
+          cleared and swept. And parking in front of the house usually needs a
+          permit from the city.
+        </p>
+        <p>
+          We deal with these things every day and explain them as we go.
+          The page on <a href="/en/house-clearance-vienna/">house clearance</a>
+          has the details, the page on <a href="/en/clearance-and-move-vienna/">clearance
+          and move</a> covers the case of leaving Vienna.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="kopf"><p class="eyebrow">How it works</p><h2>Four steps to an empty room</h2></div>
+      <ol class="schritte">
+        {steps.map((s, i) => (
+          <li>
+            <span class="schritte__nr" aria-hidden="true">{i + 1}</span>
+            <h3>{s.t}</h3>
+            <p>{s.p}</p>
+          </li>
+        ))}
+      </ol>
+      <p style="margin-block-start: var(--s-6);"><a href="/en/prices/">Guide prices and what moves them</a></p>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap wrap--narrow"><Faq fragen={faq} titel="Frequently asked" /></div>
+  </section>
+
+  <Anfrage />
+</Basis>
+
+<style>
+  .hero { padding-block: var(--s-7) var(--s-8); }
+  .hero .wrap > * + * { margin-block-start: var(--s-5); }
+  .hero h1 { max-width: 16ch; }
+  .hero__claim { font-family: var(--font-head); font-weight: 800; font-size: var(--fs-3); letter-spacing: -0.02em; color: var(--accent-dark); }
+  .fakten {
+    list-style: none; padding: 0; margin-block-start: var(--s-7) !important;
+    display: grid; gap: 1px; background: var(--line);
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  }
+  @media (min-width: 40rem) { .fakten { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 62rem) { .fakten { grid-template-columns: repeat(4, 1fr); } }
+  .fakten li { background: var(--surface); padding: var(--s-5); color: var(--muted); font-size: 1rem; line-height: 1.45; }
+  .fakten strong { display: block; color: var(--ink); font-family: var(--font-head); font-size: 1.15rem; margin-block-end: var(--s-1); }
+  .zwei { display: grid; gap: var(--s-5); }
+  @media (min-width: 62rem) { .zwei { grid-template-columns: 1fr 1.4fr; gap: var(--s-8); } }
+  .schritte { list-style: none; padding: 0; display: grid; gap: var(--s-6); }
+  @media (min-width: 40rem) { .schritte { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 62rem) { .schritte { grid-template-columns: repeat(4, 1fr); } }
+  .schritte li { border-block-start: 3px solid var(--ink); padding-block-start: var(--s-4); }
+  .schritte__nr { font-family: var(--font-head); font-weight: 800; font-size: 2.5rem; line-height: 1; color: var(--accent); }
+  .schritte h3 { font-size: 1.25rem; margin-block: var(--s-3) var(--s-2); }
+  .schritte p { color: var(--muted); font-size: 1rem; }
+</style>

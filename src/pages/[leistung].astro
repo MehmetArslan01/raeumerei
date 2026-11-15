@@ -1,0 +1,101 @@
+---
+/** Eine Vorlage für alle Leistungsseiten aus src/data/leistungen.ts. */
+import Basis from '../layouts/Basis.astro';
+import Faq from '../components/Faq.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { leistungen, leistung as finde, type Leistung } from '../data/leistungen';
+import { company } from '../data/company';
+
+export function getStaticPaths() {
+  return leistungen.map((l) => ({ params: { leistung: l.slug }, props: { l } }));
+}
+
+interface Props { l: Leistung }
+const { l } = Astro.props;
+const pfad = `/${l.slug}/`;
+const verwandt = l.verwandt.map(finde);
+---
+<Basis
+  title={l.title}
+  description={l.description}
+  canonicalPath={pfad}
+  schema="service"
+  serviceName={l.h1}
+  serviceDescription={l.description}
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: l.nav, url: pfad }]}
+  faq={l.faq}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">{l.eyebrow}</p>
+      <h1 style="margin-block-start: var(--s-4);">{l.h1}</h1>
+      <p class="lead">{l.lead}</p>
+      <div class="btn-row">
+        <a class="btn" href="#anfrage">Besichtigung vereinbaren</a>
+        <a class="btn btn--ghost" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap zweispaltig">
+      <div class="prose">
+        {l.abschnitte.map((a, i) => (
+          <>
+            <h2 style={i === 0 ? 'margin-block-start:0' : undefined}>{a.h2}</h2>
+            {a.text.map((t) => <p set:html={t} />)}
+            {a.liste && <ul>{a.liste.map((p) => <li>{p}</li>)}</ul>}
+          </>
+        ))}
+
+        {l.vorbehalt && (
+          <p class="disclaimer" style="margin-block-start: var(--s-6);">
+            <strong>Angaben ohne Gewähr.</strong> Hinweise zu Verträgen, Fristen und
+            Behörden auf dieser Seite sind allgemeine Orientierung und keine
+            Rechtsberatung. Verbindlich sind Ihr Vertrag und die Auskunft der
+            zuständigen Stelle.
+          </p>
+        )}
+      </div>
+
+      <aside class="rand" aria-label="Kurzüberblick">
+        <div class="kasten">
+          <h2>Im Auftrag enthalten</h2>
+          <ul class="haken" style="margin-block-start: var(--s-4);">
+            {l.umfang.map((u) => <li>{u}</li>)}
+          </ul>
+        </div>
+        <div class="kasten kasten--akzent stack">
+          <h2>Was es kostet</h2>
+          <p>Richtwerte je Objektgröße stehen auf der <a href="/preise/">Preisseite</a>. Den verbindlichen Betrag bekommen Sie schriftlich nach der Besichtigung.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <Faq fragen={l.faq} titel={`Fragen zu: ${l.nav}`} />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Passt dazu</p>
+        <h2>Verwandte Leistungen</h2>
+      </div>
+      <div class="grid grid--3">
+        {verwandt.map((v) => (
+          <a class="card" href={`/${v.slug}/`}>
+            <h3>{v.nav}</h3>
+            <p>{v.kurz}</p>
+            <span class="card__mehr">Zur Seite</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Anfrage vorauswahl={l.anliegen} />
+</Basis>

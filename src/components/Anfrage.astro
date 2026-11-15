@@ -1,0 +1,61 @@
+---
+/** Abschlussblock jeder Seite: Kontaktwege links, Formular rechts. */
+import Formular from './Formular.astro';
+import { company, whatsappUrl } from '../data/company';
+import { sprache } from '../data/i18n';
+
+interface Props {
+  titel?: string;
+  text?: string;
+  vorauswahl?: 'entruempelung' | 'umzug' | 'beides' | '';
+}
+const en = sprache(Astro.url.pathname) === 'en';
+const {
+  titel = en ? 'Tell us what needs clearing or moving' : 'Sagen Sie uns, was geräumt werden soll',
+  text = en
+    ? 'A call or four lines in the form is enough. We come to look at it, and you get the price in writing.'
+    : 'Ein Anruf oder vier Zeilen im Formular genügen. Wir kommen zur Besichtigung, und Sie bekommen den Preis schriftlich.',
+  vorauswahl = '',
+} = Astro.props;
+const wa = en ? whatsappUrl('Hello, I would like a quote for ') : whatsappUrl();
+---
+<section class="section section--tint" id="anfrage">
+  <div class="wrap anfrageblock">
+    <div class="stack">
+      <p class="eyebrow">{en ? 'Get a quote' : 'Angebot einholen'}</p>
+      <h2>{titel}</h2>
+      <p class="lead">{text}</p>
+      <ul class="wege">
+        <li>
+          <span>{en ? 'Phone' : 'Telefon'}</span>
+          <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+        </li>
+        {wa && (
+          <li>
+            <span>WhatsApp</span>
+            <a href={wa} rel="noopener">{en ? 'Send a message with photos' : 'Nachricht mit Fotos schicken'}</a>
+          </li>
+        )}
+        <li>
+          <span>E-Mail</span>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+        </li>
+      </ul>
+      <p class="muted">{en ? 'We speak English and German.' : `${company.hours.text}.`}</p>
+    </div>
+    <div class="anfrageblock__form">
+      <Formular vorauswahl={vorauswahl} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .anfrageblock { display: grid; gap: var(--s-7); }
+  @media (min-width: 62rem) { .anfrageblock { grid-template-columns: 1fr 1.1fr; align-items: start; } }
+  .anfrageblock__form { background: var(--surface); border-radius: var(--radius); padding: var(--s-5); }
+  @media (min-width: 40rem) { .anfrageblock__form { padding: var(--s-6); } }
+  .wege { list-style: none; padding: 0; margin-block-start: var(--s-5); display: grid; gap: var(--s-3); }
+  .wege li { display: grid; grid-template-columns: 6rem 1fr; align-items: baseline; }
+  .wege span { font-size: var(--fs-0); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .wege a { font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
+</style>

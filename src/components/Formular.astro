@@ -1,0 +1,142 @@
+---
+/**
+ * Anfrageformular. Fünf Felder, funktioniert ohne JavaScript (POST an
+ * /api/anfrage/). Spamschutz über verstecktes Feld und Zeitmessung, ohne
+ * Drittanbieter. Die Feldnamen gibt src/pages/api/anfrage.ts vor.
+ */
+import { company } from '../data/company';
+import { sprache } from '../data/i18n';
+
+interface Props { vorauswahl?: 'entruempelung' | 'umzug' | 'beides' | '' }
+const { vorauswahl = '' } = Astro.props;
+const en = sprache(Astro.url.pathname) === 'en';
+
+/* Übersetzt wird, was der Absender sieht. Die Feldnamen bleiben gleich. */
+const t = en
+  ? {
+      anliegen: 'What do you need?', waehlen: 'Please choose',
+      optRaeumung: 'Clearance', optUmzug: 'Move or transport', optBeides: 'Clearance and move', optUnklar: 'Not sure yet',
+      ort: 'Where in Vienna?', ortPlatz: 'District or address', telefon: 'Phone',
+      notiz: 'Anything we should know?', freiwillig: 'optional',
+      notizPlatz: 'Number of rooms, floor, lift, a date that has to be met',
+      zustimmung: 'My details may be used to answer this enquiry. Details are in the', datenschutz: 'privacy policy (German)',
+      senden: 'Send enquiry',
+      fuss: 'No obligation. We call you back the same day. It is quicker by phone:',
+    }
+  : {
+      anliegen: 'Was steht an?', waehlen: 'Bitte wählen',
+      optRaeumung: 'Räumung oder Entrümpelung', optUmzug: 'Umzug oder Transport', optBeides: 'Räumung und Umzug', optUnklar: 'Bin mir noch nicht sicher',
+      ort: 'Wo in Wien?', ortPlatz: 'Bezirk oder Adresse', telefon: 'Telefon',
+      notiz: 'Was sollten wir wissen?', freiwillig: 'freiwillig',
+      notizPlatz: 'Zimmerzahl, Stockwerk, Lift, Termin, der eingehalten werden muss',
+      zustimmung: 'Meine Angaben dürfen verwendet werden, um diese Anfrage zu beantworten. Einzelheiten stehen in der', datenschutz: 'Datenschutzerklärung',
+      senden: 'Anfrage senden',
+      fuss: `Unverbindlich. Wir melden uns ${company.responseTime} telefonisch. Schneller geht es unter`,
+    };
+---
+<form class="anfrage" method="POST" action="/api/anfrage/" novalidate data-lang={en ? 'en' : 'de'}>
+  <div class="hp" aria-hidden="true">
+    <label for="firma-zusatz">Firma</label>
+    <input type="text" id="firma-zusatz" name="firma_zusatz" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="ts" value={Date.now()} />
+  {en && <input type="hidden" name="sprache" value="en" />}
+
+  <div class="anfrage__raster">
+    <div class="field">
+      <label for="anliegen">{t.anliegen}</label>
+      <select id="anliegen" name="anliegen" required>
+        <option value="" disabled selected={!vorauswahl}>{t.waehlen}</option>
+        <option value="entruempelung" selected={vorauswahl === 'entruempelung'}>{t.optRaeumung}</option>
+        <option value="umzug" selected={vorauswahl === 'umzug'}>{t.optUmzug}</option>
+        <option value="beides" selected={vorauswahl === 'beides'}>{t.optBeides}</option>
+        <option value="unklar">{t.optUnklar}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="ort">{t.ort}</label>
+      <input type="text" id="ort" name="ort" required autocomplete="address-level2" placeholder={t.ortPlatz} />
+    </div>
+    <div class="field">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="telefon">{t.telefon}</label>
+      <input type="tel" id="telefon" name="telefon" required inputmode="tel" autocomplete="tel" placeholder="+43 …" />
+    </div>
+  </div>
+
+  <div class="field anfrage__notiz">
+    <label for="notiz">{t.notiz} <span class="field__hint">{t.freiwillig}</span></label>
+    <textarea id="notiz" name="notiz" rows="3" placeholder={t.notizPlatz}></textarea>
+  </div>
+
+  <div class="anfrage__zustimmung">
+    <input type="checkbox" id="zustimmung" name="zustimmung" required />
+    <label for="zustimmung">
+      {t.zustimmung} <a href="/datenschutz/">{t.datenschutz}</a>.
+    </label>
+  </div>
+
+  <button type="submit" class="btn">{t.senden}</button>
+  <p class="anfrage__fuss">
+    {t.fuss} <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>.
+  </p>
+</form>
+
+<style>
+  .anfrage { display: grid; gap: var(--s-4); }
+  .anfrage__raster { display: grid; gap: var(--s-4); }
+  @media (min-width: 36rem) { .anfrage__raster { grid-template-columns: 1fr 1fr; } }
+  .anfrage__zustimmung { display: grid; grid-template-columns: auto 1fr; gap: var(--s-3); font-size: var(--fs-0); color: var(--muted); }
+  .anfrage__zustimmung input { width: 1.25rem; height: 1.25rem; margin-block-start: 0.15rem; accent-color: var(--accent); }
+  .anfrage .btn { justify-self: start; min-width: 14rem; }
+  .anfrage__fuss { font-size: var(--fs-0); color: var(--muted); }
+</style>
+
+<script is:inline>
+  /* Verbesserung, keine Voraussetzung: Fehlermeldungen im Klartext. */
+  (function () {
+    var form = document.querySelector('.anfrage');
+    if (!form) return;
+    var en = form.getAttribute('data-lang') === 'en';
+    var texte = en ? {
+      anliegen: 'Please choose what it is about.',
+      ort: 'Please give a district or address.',
+      name: 'Please give your name.',
+      telefon: 'Please give a number we can call back.',
+      zustimmung: 'We need your consent to handle the enquiry.'
+    } : {
+      anliegen: 'Bitte wählen Sie, worum es geht.',
+      ort: 'Bitte nennen Sie Bezirk oder Adresse.',
+      name: 'Bitte nennen Sie Ihren Namen.',
+      telefon: 'Bitte nennen Sie eine Nummer für den Rückruf.',
+      zustimmung: 'Ohne Ihre Zustimmung dürfen wir die Anfrage nicht bearbeiten.'
+    };
+    function box(feld) { return feld.closest('.field') || feld.closest('.anfrage__zustimmung'); }
+    function weg(feld) {
+      var b = box(feld); if (!b) return;
+      var alt = b.querySelector('.field__error'); if (alt) alt.remove();
+      feld.removeAttribute('aria-invalid'); feld.removeAttribute('aria-describedby');
+    }
+    function zeigen(feld) {
+      var b = box(feld); if (!b) return;
+      weg(feld);
+      var p = document.createElement('p');
+      p.className = 'field__error'; p.id = feld.id + '-fehler'; p.setAttribute('role', 'alert');
+      p.textContent = texte[feld.name] || (en ? 'Please check this field.' : 'Bitte prüfen Sie diese Angabe.');
+      b.appendChild(p);
+      feld.setAttribute('aria-describedby', p.id); feld.setAttribute('aria-invalid', 'true');
+    }
+    form.addEventListener('submit', function (e) {
+      var erster = null;
+      Array.prototype.forEach.call(form.elements, function (feld) {
+        if (!feld.name || feld.type === 'hidden' || feld.type === 'submit') return;
+        if (feld.checkValidity()) weg(feld); else { zeigen(feld); if (!erster) erster = feld; }
+      });
+      if (erster) { e.preventDefault(); erster.focus(); }
+    });
+    form.addEventListener('input', function (e) { if (e.target.checkValidity()) weg(e.target); });
+  })();
+</script>

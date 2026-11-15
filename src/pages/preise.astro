@@ -1,0 +1,122 @@
+---
+import Basis from '../layouts/Basis.astro';
+import Faq from '../components/Faq.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { preise } from '../data/preise';
+
+const faq = [
+  {
+    q: 'Warum nennen Sie keinen Preis pro Quadratmeter?',
+    a: 'Weil er in die Irre führt. Eine leere Wohnung mit 90 Quadratmetern ist schneller geräumt als eine volle mit 40. Maßgeblich sind Menge, Stockwerk, Lift und der Weg zum Fahrzeug.',
+  },
+  {
+    q: 'Kann der Preis nach der Besichtigung noch steigen?',
+    a: 'Nicht für das, was besichtigt wurde. Kommen Räume oder Mengen dazu, die nicht gezeigt wurden, sprechen wir vor dem Weiterarbeiten mit Ihnen.',
+  },
+  {
+    q: 'Was kostet die Besichtigung?',
+    a: 'Nichts. Sie ist kostenlos und unverbindlich.',
+  },
+  {
+    q: 'Wie wird bezahlt?',
+    a: 'Zahlungsart und Zeitpunkt stehen im Angebot, bevor Sie zusagen. Sie bekommen in jedem Fall eine Rechnung.',
+  },
+];
+---
+<Basis
+  title="Preise für Räumung und Umzug in Wien | Räumerei"
+  description="Richtwerte für Entrümpelung, Wohnungsräumung und Umzug in Wien, inklusive Umsatzsteuer. Dazu: was den Preis hebt, was ihn senkt und was im Angebot steht."
+  canonicalPath="/preise/"
+  priceCatalog
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Preise', url: '/preise/' }]}
+  faq={faq}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Preise</p>
+      <h1 style="margin-block-start: var(--s-4);">Was Räumung und Umzug in Wien kosten</h1>
+      <p class="lead">
+        Richtwerte, damit Sie planen können. Den verbindlichen Betrag bekommen
+        Sie schriftlich, nachdem wir die Räume gesehen haben.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap">
+      <div class="grid grid--2">
+        <table class="tabelle">
+          <caption>Räumung und Entrümpelung</caption>
+          <thead><tr><th scope="col">Objekt</th><th scope="col">Richtwert</th></tr></thead>
+          <tbody>{preise.raeumung.map((p) => <tr><td>{p.objekt}</td><td>{p.rahmen}</td></tr>)}</tbody>
+        </table>
+        <table class="tabelle">
+          <caption>Umzug und Transport</caption>
+          <thead><tr><th scope="col">Objekt</th><th scope="col">Richtwert</th></tr></thead>
+          <tbody>{preise.umzug.map((p) => <tr><td>{p.objekt}</td><td>{p.rahmen}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <p class="disclaimer" style="margin-block-start: var(--s-5);">
+        <strong>Richtwerte, kein Angebot.</strong> {preise.hinweis}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="kopf">
+        <p class="eyebrow">Wie der Preis entsteht</p>
+        <h2>Was den Betrag hebt und was ihn senkt</h2>
+      </div>
+      <div class="grid grid--2">
+        <div class="kasten stack">
+          <h3>Das macht es teurer</h3>
+          <ul class="prose" style="padding-inline-start: 1.25rem;">
+            <li>Hohes Stockwerk ohne Lift oder mit sehr kleinem Lift</li>
+            <li>Volle Kästen, Keller und Abstellräume</li>
+            <li>Langer Weg zwischen Haustor und Fahrzeug</li>
+            <li>Viele Möbel, die zerlegt werden müssen</li>
+            <li>Termine zum Monatsende oder mit sehr kurzem Vorlauf</li>
+          </ul>
+        </div>
+        <div class="kasten stack">
+          <h3>Das macht es günstiger</h3>
+          <ul class="prose" style="padding-inline-start: 1.25rem;">
+            <li>Was Familie und Bekannte vorher abholen</li>
+            <li>Ein Stellplatz direkt vor dem Haus</li>
+            <li>Ein Termin in der Monatsmitte</li>
+            <li>Räumung und Umzug als gemeinsamer Auftrag</li>
+            <li>Mehrere Parteien im Haus, die am selben Tag räumen lassen</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap wrap--narrow prose">
+      <h2 style="margin-block-start:0;">Was in unserem Angebot steht</h2>
+      <p>
+        Ein Angebot ist nur so gut wie seine Beschreibung. In unserem lesen Sie,
+        welche Räume gemeint sind, ob Keller, Dachboden und Garage dazugehören,
+        was abgebaut wird, an welchem Tag wir kommen und wie viele Leute. Der
+        Betrag ist inklusive Umsatzsteuer ausgewiesen.
+      </p>
+      <p>
+        Gebühren, die an Behörden gehen, etwa für eine Halteverbotszone, stehen
+        als eigene Zeile darin. Leistungen anderer Gewerke wie Installateur,
+        Elektriker oder Reinigungsbetrieb sind nicht Teil unseres Angebots.
+      </p>
+      <p>
+        Mehr dazu, wie Sie Angebote vergleichen, steht im Ratgeber
+        <a href="/ratgeber/entruempelung-kosten-wien/">Was kostet eine Entrümpelung in Wien?</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow"><Faq fragen={faq} titel="Fragen zu den Preisen" /></div>
+  </section>
+
+  <Anfrage titel="Für eine genaue Zahl brauchen wir zwanzig Minuten" text="So lange dauert eine Besichtigung im Schnitt. Danach haben Sie einen schriftlichen Preis." />
+</Basis>

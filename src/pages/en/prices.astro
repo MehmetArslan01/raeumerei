@@ -1,0 +1,102 @@
+---
+import Basis from '../../layouts/Basis.astro';
+import Faq from '../../components/Faq.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import { preise } from '../../data/preise';
+
+/* Dieselben Zahlen wie auf /preise/ (src/data/preise.ts), nur die Beschriftung ist englisch. */
+const en = (r: string) => r.replace('ab ', 'from ').replace('nach Aufwand', 'by effort');
+const raeumung = ['Cellar compartment or single room', '1–2 room flat', '3–4 room flat', 'House, several days'];
+const umzug = ['Single item or small transport', '1–2 room flat', '3–4 room flat', 'Office move'];
+
+const faq = [
+  {
+    q: 'Why is there no price per square metre?',
+    a: 'Because it misleads. An almost empty flat of 90 square metres is cleared faster than a full one of 40. Volume, floor, lift and the distance to the van are what count.',
+  },
+  {
+    q: 'Can the price rise after the viewing?',
+    a: 'Not for what we saw. If rooms or volumes turn up that were not shown, we talk to you before carrying on.',
+  },
+  {
+    q: 'What does the viewing cost?',
+    a: 'Nothing, and it commits you to nothing.',
+  },
+  {
+    q: 'A note on counting rooms',
+    a: 'In Austria the kitchen and bathroom are not counted as rooms. A “2-Zimmer-Wohnung” is what many would call a one-bedroom flat.',
+  },
+];
+---
+<Basis
+  title="Prices for Clearance and Moving in Vienna | Räumerei"
+  description="Guide prices for house clearance and moving in Vienna, VAT included. Plus what raises the price, what lowers it and what our written quote contains."
+  canonicalPath="/en/prices/"
+  priceCatalog
+  breadcrumbs={[{ name: 'Home', url: '/en/' }, { name: 'Prices', url: '/en/prices/' }]}
+  faq={faq}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Prices</p>
+      <h1 style="margin-block-start: var(--s-4);">What clearance and moving cost in Vienna</h1>
+      <p class="lead">Guide prices so you can plan. The binding amount comes in writing once we have seen the rooms.</p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap">
+      <div class="grid grid--2">
+        <table class="tabelle">
+          <caption>Clearance</caption>
+          <thead><tr><th scope="col">Property</th><th scope="col">Guide price</th></tr></thead>
+          <tbody>{preise.raeumung.map((p, i) => <tr><td>{raeumung[i]}</td><td>{en(p.rahmen)}</td></tr>)}</tbody>
+        </table>
+        <table class="tabelle">
+          <caption>Moving and transport</caption>
+          <thead><tr><th scope="col">Property</th><th scope="col">Guide price</th></tr></thead>
+          <tbody>{preise.umzug.map((p, i) => <tr><td>{umzug[i]}</td><td>{en(p.rahmen)}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <p class="disclaimer" style="margin-block-start: var(--s-5);">
+        <strong>Guide prices, not an offer.</strong> All amounts are non-binding
+        estimates including VAT. The actual price depends on the scope and is
+        set in writing after the viewing. Fees charged by authorities, such as
+        for a no-parking zone, are shown separately.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="kopf"><p class="eyebrow">How the price comes about</p><h2>What raises it and what lowers it</h2></div>
+      <div class="grid grid--2">
+        <div class="kasten stack">
+          <h3>Makes it more expensive</h3>
+          <ul class="prose" style="padding-inline-start: 1.25rem;">
+            <li>A high floor with no lift or a very small one</li>
+            <li>Full cupboards, cellar and storage rooms</li>
+            <li>A long way from the front door to the van</li>
+            <li>A lot of furniture that has to be taken apart</li>
+            <li>Dates at the end of a month or at very short notice</li>
+          </ul>
+        </div>
+        <div class="kasten stack">
+          <h3>Makes it cheaper</h3>
+          <ul class="prose" style="padding-inline-start: 1.25rem;">
+            <li>Whatever friends and colleagues collect beforehand</li>
+            <li>A parking space right in front of the house</li>
+            <li>A date in the middle of the month</li>
+            <li>Clearance and move booked as one job</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap wrap--narrow"><Faq fragen={faq} titel="Questions about prices" /></div>
+  </section>
+
+  <Anfrage titel="An exact figure takes twenty minutes" text="That is how long a viewing takes on average. After it you have a written price." />
+</Basis>

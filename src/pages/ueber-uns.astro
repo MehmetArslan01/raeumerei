@@ -1,0 +1,95 @@
+---
+import Basis from '../layouts/Basis.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { company } from '../data/company';
+---
+<Basis
+  title="Über uns: wer hinter der Räumerei steht | Räumerei"
+  description="Die Räumerei ist ein Wiener Betrieb aus Simmering mit Gewerbeberechtigung für Entrümpelung und Güterbeförderung. Wer wir sind und wie wir arbeiten."
+  canonicalPath="/ueber-uns/"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Über uns', url: '/ueber-uns/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Über uns</p>
+      <h1 style="margin-block-start: var(--s-4);">Ein Betrieb aus Simmering, der Räume leer macht</h1>
+      <p class="lead">
+        Räumerei: so wie Tischlerei oder Bäckerei. Ein Handwerk mit einem
+        einzigen Ergebnis, an dem man uns messen kann. Der Raum ist leer und gekehrt.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap zweispaltig">
+      <div class="prose">
+        <h2 style="margin-block-start:0;">Wer dahintersteht</h2>
+        <p>
+          Die Räumerei ist die Marke, unter der {company.owner} in Wien
+          Räumungen und Umzüge durchführt. Der Betrieb ist ein
+          {company.legalForm} mit Sitz im 11. Bezirk und Mitglied der
+          {company.chamber}. Alle Angaben dazu stehen im <a href="/impressum/">Impressum</a>.
+        </p>
+
+        <h2>Wie wir arbeiten</h2>
+        <h3>Erst ansehen, dann einen Preis nennen</h3>
+        <p>
+          Wir geben kein verbindliches Angebot für Räume ab, die wir nicht
+          gesehen haben. Das dauert einen Termin länger, erspart aber beiden
+          Seiten die Diskussion am Räumungstag.
+        </p>
+        <h3>Alles schriftlich</h3>
+        <p>
+          Umfang, Termin und Betrag stehen im Angebot. Was dort steht, gilt.
+          Ändert sich vor Ort etwas, besprechen wir es, bevor wir weiterarbeiten.
+        </p>
+        <h3>Nichts geht ungesehen hinaus</h3>
+        <p>
+          Kästen, Laden und Taschen werden geöffnet. Dokumente, Fotos, Schmuck,
+          Schlüssel und Bargeld sammeln wir und übergeben sie.
+        </p>
+        <h3>Wir sagen, was wir nicht tun</h3>
+        <p>
+          Eine Räumung endet besenrein. Reinigung, Arbeiten an Leitungen und
+          Anschlüssen und Eingriffe in die Bausubstanz gehören anderen Gewerben.
+          Wenn so etwas nötig ist, sagen wir es Ihnen früh genug.
+        </p>
+
+        <h2>Was Sie von uns nicht lesen werden</h2>
+        <p>
+          Auf dieser Website stehen keine Kundenzahlen, keine Sterne und keine
+          Auszeichnungen. Die Marke ist neu, und wir schreiben nichts, was wir
+          nicht belegen können. Was wir vorweisen können, ist ein Angebot, das
+          hält, und ein Raum, der am vereinbarten Tag leer ist.
+        </p>
+      </div>
+
+      <aside class="rand" aria-label="Betriebsdaten">
+        <div class="kasten">
+          <h2>Betriebsdaten</h2>
+          <dl class="daten">
+            <dt>Inhaber</dt><dd>{company.owner}</dd>
+            <dt>Standort</dt><dd>{company.address.postalCode} {company.address.city}, Simmering</dd>
+            <dt>Gewerbe</dt><dd>Entrümpler; Güterbeförderung mit Fahrzeugen bis 3.500 kg</dd>
+            <dt>GISA-Zahlen</dt><dd>{company.gisa.join(', ')}</dd>
+            <dt>Behörde</dt><dd>{company.tradeAuthority}</dd>
+            <dt>UID</dt><dd>{company.vatId}</dd>
+          </dl>
+        </div>
+        <div class="kasten kasten--akzent stack">
+          <h2>Erreichbar</h2>
+          <p>{company.hours.text}.</p>
+          <p><a href={`tel:${company.phoneHref}`}><strong>{company.phoneDisplay}</strong></a></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <Anfrage />
+</Basis>
+
+<style>
+  .daten { margin: var(--s-4) 0 0; display: grid; gap: var(--s-1); }
+  .daten dt { font-size: var(--fs-0); font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-block-start: var(--s-3); }
+  .daten dd { margin: 0; }
+</style>

@@ -1,0 +1,104 @@
+---
+import Basis from '../layouts/Basis.astro';
+import Anfrage from '../components/Anfrage.astro';
+import { company } from '../data/company';
+
+const schritte = [
+  {
+    t: 'Erster Kontakt',
+    dauer: '5 Minuten',
+    p: [
+      'Sie rufen an, schreiben per WhatsApp oder füllen das Formular aus. Wir fragen nach fünf Dingen: Was soll geräumt werden, in welchem Bezirk, in welchem Stock, gibt es einen Lift, und bis wann muss es erledigt sein.',
+      'Mit diesen Angaben nennen wir einen Rahmen. Wenn er für Sie passt, vereinbaren wir die Besichtigung.',
+    ],
+  },
+  {
+    t: 'Besichtigung',
+    dauer: 'etwa 20 Minuten',
+    p: [
+      'Wir kommen zu Ihnen und gehen durch alle Räume, die geräumt werden sollen. Zeigen Sie uns auch Keller, Dachboden, Garage und Abstellräume im Haus. Was wir nicht gesehen haben, steht nicht im Angebot.',
+      'Dabei klären wir, was bleibt, was zerlegt werden muss, wo das Fahrzeug stehen kann und wer am Räumungstag den Schlüssel hat. Wenn Sie nicht in Wien sind, geht das auch per Videoanruf mit einer Person vor Ort.',
+    ],
+  },
+  {
+    t: 'Angebot',
+    dauer: 'meist am selben Tag',
+    p: [
+      'Sie bekommen ein schriftliches Angebot. Darin stehen die Räume, die enthaltenen Arbeiten, der Termin und der Betrag inklusive Umsatzsteuer. Sie können in Ruhe vergleichen. Erst wenn Sie zusagen, wird der Termin fixiert.',
+    ],
+  },
+  {
+    t: 'Vorbereitung',
+    dauer: 'Tage vor dem Termin',
+    p: [
+      'Sie nehmen mit, was Sie behalten. Wir kümmern uns um das Fahrzeug und das Team und stimmen, wenn nötig, die Liftnutzung mit der Hausverwaltung ab. Braucht es eine Halteverbotszone, muss sie rechtzeitig bei der MA 46 beantragt werden.',
+      'Eine Liste zum Abhaken finden Sie im Ratgeber <a href="/ratgeber/entruempelung-vorbereiten/">Entrümpelung vorbereiten</a>.',
+    ],
+  },
+  {
+    t: 'Räumung',
+    dauer: 'je nach Umfang ein bis mehrere Tage',
+    p: [
+      'Das Team kommt zur vereinbarten Zeit. Zuerst sichern wir, was bleibt. Dann wird Raum für Raum geleert: Kästen und Laden durchsehen, Möbel zerlegen, tragen, verladen. Persönliches, das wir finden, sammeln wir für Sie.',
+    ],
+  },
+  {
+    t: 'Übergabe',
+    dauer: '15 Minuten',
+    p: [
+      'Am Ende sind die Räume gekehrt. Wir gehen gemeinsam durch, oder Sie bekommen Fotos von jedem Raum. Schlüssel und Fundstücke übergeben wir Ihnen oder der Person, die Sie nennen. Danach kommt die Rechnung.',
+    ],
+  },
+];
+---
+<Basis
+  title="Ablauf einer Räumung in Wien: sechs Schritte | Räumerei"
+  description="So läuft eine Räumung bei der Räumerei ab: vom ersten Anruf über Besichtigung und schriftliches Angebot bis zur besenreinen Übergabe. Mit Zeitangabe je Schritt."
+  canonicalPath="/ablauf/"
+  breadcrumbs={[{ name: 'Start', url: '/' }, { name: 'Ablauf', url: '/ablauf/' }]}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">Ablauf</p>
+      <h1 style="margin-block-start: var(--s-4);">So läuft eine Räumung ab</h1>
+      <p class="lead">
+        Sechs Schritte vom ersten Anruf bis zum leeren Raum. Bei jedem steht,
+        was wir tun, was Sie tun und wie lange es dauert.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--surface" style="padding-block-start: var(--s-7);">
+    <div class="wrap wrap--narrow">
+      <ol class="ablauf">
+        {schritte.map((s, i) => (
+          <li>
+            <span class="ablauf__nr" aria-hidden="true">{i + 1}</span>
+            <div class="stack">
+              <h2>{s.t}</h2>
+              <p class="ablauf__dauer">{s.dauer}</p>
+              {s.p.map((t) => <p set:html={t} />)}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="disclaimer" style="margin-block-start: var(--s-6);">
+        <strong>Angaben ohne Gewähr.</strong> Fristen und Gebühren für eine
+        Halteverbotszone legt die Stadt Wien fest. Aktuelle Auskunft gibt die MA 46.
+      </p>
+    </div>
+  </section>
+
+  <Anfrage titel="Schritt eins dauert fünf Minuten" text={`Rufen Sie an unter ${company.phoneDisplay} oder schreiben Sie uns. Den Rest erklären wir am Telefon.`} />
+</Basis>
+
+<style>
+  .ablauf { list-style: none; padding: 0; display: grid; gap: var(--s-7); }
+  .ablauf li { display: grid; grid-template-columns: 3.25rem 1fr; gap: var(--s-4); }
+  .ablauf__nr {
+    width: 3.25rem; height: 3.25rem; display: grid; place-items: center; border-radius: 50%;
+    background: var(--accent); color: #fff; font-family: var(--font-head); font-weight: 800; font-size: 1.4rem;
+  }
+  .ablauf h2 { font-size: var(--fs-3); padding-block-start: 0.55rem; }
+  .ablauf__dauer { font-size: var(--fs-0); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-dark); margin-block-start: var(--s-2); }
+</style>

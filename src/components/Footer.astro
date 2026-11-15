@@ -1,0 +1,125 @@
+---
+import Logo from './Logo.astro';
+import { company, whatsappUrl } from '../data/company';
+import { leistungen } from '../data/leistungen';
+import { artikel } from '../data/ratgeber';
+import { NAV_EN, sprache } from '../data/i18n';
+
+const jahr = new Date().getFullYear();
+const en = sprache(Astro.url.pathname) === 'en';
+const wa = en ? whatsappUrl('Hello, I would like a quote for ') : whatsappUrl();
+---
+<footer class="fuss">
+  <div class="wrap">
+    <div class="fuss__oben">
+      <div class="fuss__marke">
+        <a href={en ? '/en/' : '/'} aria-label={en ? 'Home' : 'Zur Startseite'}><Logo hell /></a>
+        <p>
+          {en
+            ? 'House clearance and moving in Vienna. One visit, one written price, rooms handed back empty and swept.'
+            : 'Entrümpelung, Räumung und Umzug in Wien. Eine Besichtigung, ein schriftlicher Preis, eine besenreine Übergabe.'}
+        </p>
+        <p class="fuss__kontakt">
+          <a href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a><br />
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+          {wa && <><br /><a href={wa} rel="noopener">{en ? 'Message us on WhatsApp' : 'WhatsApp schreiben'}</a></>}
+        </p>
+        <p class="fuss__zeiten">{en ? 'We speak English and German.' : company.hours.text}</p>
+      </div>
+
+      {en ? (
+        <>
+          <nav aria-label="Services">
+            <h2>Services</h2>
+            <ul>{NAV_EN.slice(0, 3).map((l) => <li><a href={l.url}>{l.name}</a></li>)}</ul>
+          </nav>
+          <nav aria-label="Company">
+            <h2>Company</h2>
+            <ul>
+              <li><a href="/en/prices/">Prices</a></li>
+              <li><a href="/en/contact/">Contact</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="In German">
+            <h2>In German</h2>
+            <ul>
+              <li><a href="/" hreflang="de" lang="de">Deutsche Website</a></li>
+              <li><a href="/ratgeber/" hreflang="de" lang="de">Ratgeber</a></li>
+              <li><a href="/einsatzgebiet-wien/" hreflang="de" lang="de">Einsatzgebiet Wien</a></li>
+            </ul>
+          </nav>
+        </>
+      ) : (
+        <>
+          <nav aria-label="Räumung">
+            <h2>Räumung</h2>
+            <ul>
+              {leistungen.filter((l) => l.gruppe === 'raeumung').map((l) => (
+                <li><a href={`/${l.slug}/`}>{l.nav}</a></li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Umzug">
+            <h2>Umzug</h2>
+            <ul>
+              {leistungen.filter((l) => l.gruppe === 'umzug').map((l) => (
+                <li><a href={`/${l.slug}/`}>{l.nav}</a></li>
+              ))}
+            </ul>
+            <h2 class="fuss__zweite">Betrieb</h2>
+            <ul>
+              <li><a href="/preise/">Preise</a></li>
+              <li><a href="/ablauf/">Ablauf</a></li>
+              <li><a href="/einsatzgebiet-wien/">Einsatzgebiet Wien</a></li>
+              <li><a href="/ueber-uns/">Über uns</a></li>
+              <li><a href="/kontakt/">Kontakt</a></li>
+              <li><a href="/en/" hreflang="en" lang="en">English</a></li>
+            </ul>
+          </nav>
+
+          <nav aria-label="Ratgeber">
+            <h2>Ratgeber</h2>
+            <ul>
+              {artikel.map((a) => (
+                <li><a href={`/ratgeber/${a.slug}/`}>{a.nav}</a></li>
+              ))}
+              <li><a href="/ratgeber/">Alle Beiträge</a></li>
+            </ul>
+          </nav>
+        </>
+      )}
+    </div>
+
+    <div class="fuss__unten">
+      <p>© {jahr} {company.brand} · {company.name}, {company.address.postalCode} {en ? 'Vienna' : company.address.city}</p>
+      {en
+        ? <p>All information without warranty. Prices are estimates; only the written quote is binding. Legal notice and privacy policy are in German.</p>
+        : <p>Alle Angaben ohne Gewähr. Preise sind Richtwerte; verbindlich ist das schriftliche Angebot.</p>}
+      <ul>
+        <li><a href="/impressum/">{en ? 'Legal notice (Impressum)' : 'Impressum'}</a></li>
+        <li><a href="/datenschutz/">{en ? 'Privacy (Datenschutz)' : 'Datenschutz'}</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .fuss { background: var(--dark); color: var(--on-dark-muted); padding-block: var(--s-8) var(--s-6); font-size: 1rem; }
+  .fuss a { color: var(--on-dark); text-decoration: none; }
+  .fuss a:hover { text-decoration: underline; }
+  .fuss__oben { display: grid; gap: var(--s-7); }
+  @media (min-width: 40rem) { .fuss__oben { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 66rem) { .fuss__oben { grid-template-columns: 1.5fr 1fr 1fr 1.2fr; } }
+  .fuss__marke > * + * { margin-block-start: var(--s-4); }
+  .fuss__marke p { max-width: 30ch; }
+  .fuss__kontakt a { font-weight: 700; }
+  .fuss h2 { font-family: var(--font-body); font-size: var(--fs-0); letter-spacing: 0.1em; text-transform: uppercase; color: #f2b9a3; margin-block-end: var(--s-3); }
+  .fuss__zweite { margin-block-start: var(--s-6); }
+  .fuss ul { list-style: none; padding: 0; display: grid; gap: var(--s-2); }
+  .fuss__unten {
+    margin-block-start: var(--s-8); padding-block-start: var(--s-5); border-block-start: 1px solid #ffffff22;
+    display: grid; gap: var(--s-3); font-size: var(--fs-0);
+  }
+  .fuss__unten ul { display: flex; gap: var(--s-5); }
+</style>

@@ -1,0 +1,165 @@
+---
+/**
+ * Strukturierte Daten aus src/data/company.ts.
+ *
+ *  - Kein aggregateRating/review: Für diese Marke gibt es keine Bewertungen.
+ *  - Preise nur, wenn preise.geprueft gesetzt ist.
+ *  - FAQPage nur für Fragen, die sichtbar auf der Seite stehen.
+ */
+import { company } from '../data/company';
+import { bezirke } from '../data/bezirke';
+import { preise } from '../data/preise';
+import { sprache } from '../data/i18n';
+
+interface Crumb { name: string; url: string; }
+interface Props {
+  type?: 'website' | 'service' | 'article' | 'contact';
+  priceCatalog?: boolean;
+  serviceName?: string;
+  serviceDescription?: string;
+  breadcrumbs?: Crumb[];
+  faq?: { q: string; a: string }[];
+  article?: { headline: string; description: string; published: string; modified?: string };
+}
+
+const { type = 'website', priceCatalog = false, serviceName, serviceDescription, breadcrumbs, faq, article } = Astro.props;
+
+const site = company.siteUrl;
+const orgId = `${site}/#betrieb`;
+const seite = new URL(Astro.url.pathname, site).href;
+const inLanguage = sprache(Astro.url.pathname) === 'en' ? 'en' : 'de-AT';
+
+const betrieb = {
+  '@type': 'MovingCompany',
+  '@id': orgId,
+  name: company.brand,
+  legalName: company.name,
+  url: `${site}/`,
+  telephone: company.phoneHref,
+  email: company.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: company.address.street,
+    postalCode: company.address.postalCode,
+    addressLocality: company.address.city,
+    addressCountry: company.address.countryCode,
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Wien' },
+    ...bezirke.map((b) => ({
+      '@type': 'PostalAddress',
+      postalCode: b.plz,
+      addressLocality: `Wien, ${b.name}`,
+      addressCountry: 'AT',
+    })),
+  ],
+  openingHoursSpecification: company.hours.spec.map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.days,
+    opens: h.opens,
+    closes: h.closes,
+  })),
+  vatID: company.vatId,
+  logo: { '@type': 'ImageObject', url: `${site}/icon-512.png`, width: 512, height: 512 },
+  image: `${site}/og/standard.png`,
+  knowsAbout: ['Entrümpelung', 'Wohnungsräumung', 'Haushaltsauflösung', 'Verlassenschaftsräumung', 'Umzug'],
+  ...(company.profiles.length ? { sameAs: company.profiles } : {}),
+};
+
+const graph: Record<string, unknown>[] = [betrieb];
+
+if (type === 'website') {
+  graph.push({
+    '@type': 'WebSite',
+    '@id': `${site}/#website`,
+    url: `${site}/`,
+    name: company.brand,
+    inLanguage,
+    publisher: { '@id': orgId },
+  });
+}
+
+if (type === 'service' && serviceName) {
+  graph.push({
+    '@type': 'Service',
+    '@id': `${seite}#leistung`,
+    name: serviceName,
+    serviceType: serviceName,
+    ...(serviceDescription ? { description: serviceDescription } : {}),
+    url: seite,
+    provider: { '@id': orgId },
+    areaServed: { '@type': 'City', name: 'Wien' },
+    inLanguage,
+  });
+}
+
+if (type === 'contact') {
+  graph.push({ '@type': 'ContactPage', '@id': `${seite}#kontakt`, url: seite, about: { '@id': orgId } });
+}
+
+if (article) {
+  graph.push({
+    '@type': 'Article',
+    headline: article.headline,
+    description: article.description,
+    datePublished: article.published,
+    dateModified: article.modified ?? article.published,
+    author: { '@type': 'Person', name: company.author },
+    publisher: { '@id': orgId },
+    inLanguage,
+    mainEntityOfPage: seite,
+  });
+}
+
+if (priceCatalog && preise.geprueft) {
+  const angebot = (e: { objekt: string; von: number | null; bis: number | null }, leistung: string) => ({
+    '@type': 'Offer',
+    itemOffered: { '@type': 'Service', name: `${leistung}: ${e.objekt}`, provider: { '@id': orgId } },
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      priceCurrency: 'EUR',
+      minPrice: e.von,
+      ...(e.bis === null ? {} : { maxPrice: e.bis }),
+      valueAddedTaxIncluded: true,
+    },
+    areaServed: { '@type': 'City', name: 'Wien' },
+  });
+  graph.push({
+    '@type': 'OfferCatalog',
+    name: 'Richtwerte für Räumung und Umzug in Wien',
+    description: preise.hinweis,
+    provider: { '@id': orgId },
+    itemListElement: [
+      ...preise.raeumung.filter((e) => e.von !== null).map((e) => angebot(e, 'Räumung')),
+      ...preise.umzug.filter((e) => e.von !== null).map((e) => angebot(e, 'Umzug')),
+    ],
+  });
+}
+
+if (breadcrumbs?.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: new URL(c.url, site).href,
+    })),
+  });
+}
+
+if (faq?.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />

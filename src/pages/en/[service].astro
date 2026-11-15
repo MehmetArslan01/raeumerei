@@ -1,0 +1,96 @@
+---
+/** Englische Leistungsseiten aus src/data/services-en.ts. */
+import Basis from '../../layouts/Basis.astro';
+import Faq from '../../components/Faq.astro';
+import Anfrage from '../../components/Anfrage.astro';
+import { servicesEn, serviceEn } from '../../data/services-en';
+import type { Leistung } from '../../data/leistungen';
+import { company } from '../../data/company';
+
+export function getStaticPaths() {
+  return servicesEn.map((l) => ({ params: { service: l.slug }, props: { l } }));
+}
+
+interface Props { l: Leistung }
+const { l } = Astro.props;
+const pfad = `/en/${l.slug}/`;
+const verwandt = l.verwandt.map(serviceEn);
+---
+<Basis
+  title={l.title}
+  description={l.description}
+  canonicalPath={pfad}
+  schema="service"
+  serviceName={l.h1}
+  serviceDescription={l.description}
+  breadcrumbs={[{ name: 'Home', url: '/en/' }, { name: l.nav, url: pfad }]}
+  faq={l.faq}
+>
+  <section class="seitenkopf">
+    <div class="wrap">
+      <p class="eyebrow">{l.eyebrow}</p>
+      <h1 style="margin-block-start: var(--s-4);">{l.h1}</h1>
+      <p class="lead">{l.lead}</p>
+      <div class="btn-row">
+        <a class="btn" href="#anfrage">Arrange a viewing</a>
+        <a class="btn btn--ghost" href={`tel:${company.phoneHref}`}>{company.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap zweispaltig">
+      <div class="prose">
+        {l.abschnitte.map((a, i) => (
+          <>
+            <h2 style={i === 0 ? 'margin-block-start:0' : undefined}>{a.h2}</h2>
+            {a.text.map((t) => <p set:html={t} />)}
+            {a.liste && <ul>{a.liste.map((p) => <li>{p}</li>)}</ul>}
+          </>
+        ))}
+        <p class="disclaimer" style="margin-block-start: var(--s-6);">
+          <strong>Without warranty.</strong> Notes on contracts, deadlines and
+          authorities on this page are general orientation, not legal advice.
+          Your contract and the information given by the responsible office are
+          what counts.
+        </p>
+      </div>
+
+      <aside class="rand" aria-label="At a glance">
+        <div class="kasten">
+          <h2>Included in the job</h2>
+          <ul class="haken" style="margin-block-start: var(--s-4);">
+            {l.umfang.map((u) => <li>{u}</li>)}
+          </ul>
+        </div>
+        <div class="kasten kasten--akzent stack">
+          <h2>What it costs</h2>
+          <p>Guide prices by property size are on the <a href="/en/prices/">prices page</a>. The binding amount comes in writing after the viewing.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap wrap--narrow">
+      <Faq fragen={l.faq} titel="Questions and answers" />
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="wrap">
+      <div class="kopf"><p class="eyebrow">Related</p><h2>Other services</h2></div>
+      <div class="grid grid--2">
+        {verwandt.map((v) => (
+          <a class="card" href={`/en/${v.slug}/`}>
+            <h3>{v.nav}</h3>
+            <p>{v.kurz}</p>
+            <span class="card__mehr">Read more</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Anfrage vorauswahl={l.anliegen} />
+</Basis>

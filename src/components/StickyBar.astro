@@ -1,0 +1,26 @@
+---
+/** Kontaktleiste am Handy: drei Wege, immer in Daumenreichweite. */
+import { company, whatsappUrl } from '../data/company';
+import { sprache } from '../data/i18n';
+const en = sprache(Astro.url.pathname) === 'en';
+const wa = en ? whatsappUrl('Hello, I would like a quote for ') : whatsappUrl();
+---
+<div class="leiste" role="region" aria-label={en ? 'Quick contact' : 'Schnellkontakt'}>
+  <a href={`tel:${company.phoneHref}`}>{en ? 'Call' : 'Anrufen'}</a>
+  {wa && <a href={wa} rel="noopener">WhatsApp</a>}
+  <a class="leiste__haupt" href={en ? '/en/contact/#anfrage' : '/kontakt/#anfrage'}>{en ? 'Get a quote' : 'Angebot'}</a>
+</div>
+
+<style>
+  .leiste {
+    position: fixed; inset: auto 0 0 0; z-index: 60; display: flex; gap: 1px;
+    background: var(--line); border-block-start: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .leiste a {
+    flex: 1; display: grid; place-items: center; min-height: 3.6rem;
+    background: var(--surface); color: var(--ink); font-weight: 700; text-decoration: none;
+  }
+  .leiste .leiste__haupt { background: var(--accent); color: #fff; }
+  @media (min-width: 52rem) { .leiste { display: none; } }
+</style>

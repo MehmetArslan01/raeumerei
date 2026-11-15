@@ -1,0 +1,33 @@
+---
+/** Fragen als <details>: ohne JavaScript bedienbar, Inhalt steht im HTML. */
+interface Props { fragen: { q: string; a: string }[]; titel?: string }
+const { fragen, titel = 'Häufige Fragen' } = Astro.props;
+---
+<div class="faq">
+  <h2>{titel}</h2>
+  <div class="faq__liste">
+    {fragen.map((f) => (
+      <details>
+        <summary><h3>{f.q}</h3></summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+</div>
+
+<style>
+  .faq__liste { margin-block-start: var(--s-6); border-block-start: 2px solid var(--ink); }
+  details { border-block-end: 1px solid var(--line); }
+  summary {
+    display: flex; justify-content: space-between; align-items: center; gap: var(--s-4);
+    padding-block: var(--s-4); cursor: pointer; list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { font-size: 1.15rem; letter-spacing: -0.01em; line-height: 1.3; }
+  summary::after {
+    content: "+"; flex: none; width: 2rem; height: 2rem; display: grid; place-items: center;
+    border-radius: 50%; background: var(--tint); color: var(--accent-dark); font-weight: 700; font-size: 1.25rem;
+  }
+  details[open] summary::after { content: "–"; background: var(--accent); color: #fff; }
+  details p { padding-block-end: var(--s-5); color: var(--muted); max-width: 44rem; }
+</style>
