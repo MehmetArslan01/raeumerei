@@ -31,5 +31,12 @@
     "@astrojs/check": "^0.9.10",
     "typescript": "^5.7.2",
     "wrangler": "^4.123.0"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "esbuild@0.28.1": true,
+    "workerd@1.20260811.1": true,
+    "sharp@0.35.2": true,
+    "sharp@0.35.3": true
   }
 }
