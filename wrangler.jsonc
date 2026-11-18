@@ -13,6 +13,13 @@
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
 
+  // Eigene Domain. Cloudflare legt DNS-Eintrag und Zertifikat selbst an.
+  // www.raeumerei.at wird per Redirect-Regel im Cloudflare-Dashboard auf die
+  // Hauptdomain geleitet und hängt deshalb nicht am Worker.
+  "routes": [
+    { "pattern": "raeumerei.at", "custom_domain": true }
+  ],
+
   "observability": {
     "enabled": true
   },
